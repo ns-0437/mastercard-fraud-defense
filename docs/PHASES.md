@@ -131,6 +131,14 @@ do not skip gates.
   prototype."
 - **Gate**: deployed URL loads cold (not just from your warmed dev cache), the live
   detection demo produces a real model verdict end-to-end, no console errors.
+- **Actual deployment (Aug 25)**: switched to GCP Cloud Run per direction, not
+  Vercel/Render — two Docker-containerized services (FastAPI backend, static React
+  frontend via nginx) in a dedicated new GCP project (`mastercard-fraud-defense`), not
+  reusing an existing project, to keep billing/resources isolated. Verified end-to-end
+  via curl (the in-app Browser pane couldn't reach the newly-created domains, likely a
+  policy restriction on unclassified domains — not an actual deployment problem, since
+  curl with explicit DNS resolution confirmed every endpoint works correctly). Live
+  URLs are in README.md's Status section.
 
 ## Phase 6 — Solution walkthrough (.docx)
 - Sections: attack landscape (pull straight from the taxonomy graph, don't
@@ -146,17 +154,36 @@ do not skip gates.
 
 ## Phase 7 — Bulletproofing pass (this is the "test until it's bulletproof" phase)
 - Fresh clone, fresh environment, follow only the README — does it run end to end?
+  **Done (Aug 25).** Two independent fresh clones (`git clone` to a temp dir, real
+  datasets copied in, zero shared state with the working repo) ran every phase's exact
+  README command successfully, including the web app. One real finding from this: a
+  fresh clone with no `.env`/API key reproduces the *original* Phase 4 FAIL (not the
+  later Gemini-driven PASS) — documented in README.md so it doesn't read as a broken
+  repo to a keyless judge.
 - Try to break your own detector: hand-craft 5 adversarial transactions designed to
   evade it (e.g. split a large transfer into many small ones just under your velocity
   threshold) — report whether it catches them. If it doesn't, that's a real limitation
   to disclose, not to hide — judges respect a red-teamer who red-teams their own defense.
+  **Done (Aug 25), via `defend/adversarial_selftest.py`.** Result: 4 of 5 evaded
+  detection. Only an extreme-low-dollar-amount card-testing variant was caught; attacks
+  crafted to look numerically unremarkable (amounts near the real backbone's own
+  median, few hops, no extreme balance-fraction ratios) all evaded the model. This is
+  the single most important finding of the bulletproofing pass: Phase 4 proved the
+  model generalizes across *variations within* its four trained attack families, but
+  this proves it does NOT generalize to attacks that are structurally different from
+  anything it was trained on. Both facts go in the docx — reporting only Phase 4's
+  result would have been materially misleading about how robust the detector actually
+  is.
 - Check all three submission artifacts exist and satisfy the literal checklist: repo
   (runnable, documented), .docx (all four required sections present), deployed web
-  prototype (link works, cold-loads).
+  prototype (link works, cold-loads). **Repo and .docx done; web prototype deployed and
+  curl-verified (Phase 5 update above) — recommend the user personally open the live
+  URLs in a real browser once, since the in-app Browser pane could not do that check.**
 - Skim the taxonomy and docx once more for anything that reads as filler/padding rather
   than grounded — cut it, diversity is judged on real distinctness, not node count.
 - **Gate**: a person who has never seen this project could clone the repo, read the
-  README, and reproduce your headline metric within 20 minutes.
+  README, and reproduce your headline metric within 20 minutes. **PASS — confirmed by
+  literally doing this twice from scratch.**
 
 ## Phase 8 — Submit
 - Submit from the Kaggle Writeups section with all three artifacts linked, at least
