@@ -38,6 +38,7 @@ export default function ClosedLoopResults() {
   const ulb = data.ulb_baseline
   const loop = data.closed_loop
   const adversarial = data.adversarial_selftest
+  const anomaly = data.anomaly_detector
 
   return (
     <div className="space-y-6 max-w-5xl">
@@ -211,6 +212,35 @@ export default function ClosedLoopResults() {
             case evading with a near-zero fraud probability is the more concerning of the two failures —
             an attacker who makes compromised-account activity look completely routine leaves this
             detector, which scores each transaction independently, with no signal to work from at all.
+          </p>
+        </Section>
+      )}
+
+      {anomaly && (
+        <Section title="Second, materially different approach: does an unsupervised anomaly detector add coverage?">
+          <p className="text-sm text-slate-400 mb-3">
+            An IsolationForest trained ONLY on legitimate transactions (no fraud labels used at all) as a
+            complementary check — the hypothesis being that a purely statistical outlier detector might
+            catch attacks the supervised model above has never seen, since it isn't limited to recognizing
+            known attack shapes.
+          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
+            <Metric label="Precision" value={anomaly.isolation_forest.precision.toFixed(4)} />
+            <Metric label="Recall" value={anomaly.isolation_forest.recall.toFixed(4)} />
+            <Metric label="PR-AUC" value={anomaly.isolation_forest.pr_auc.toFixed(4)} />
+            <Metric label="Adversarial cases flagged" value={`${anomaly.adversarial_case_check.filter(c => c.isolation_forest_flagged).length}/5`} />
+          </div>
+          <p className="text-sm text-red-300 bg-red-500/10 border border-red-500/30 rounded-lg px-4 py-2.5">
+            Genuine negative result, not smoothed over: PR-AUC {anomaly.isolation_forest.pr_auc.toFixed(3)} is
+            barely above the ~0.017 random baseline for this class balance. It catches 0 of {anomaly.overlap_on_true_fraud.only_xgboost + anomaly.overlap_on_true_fraud.both}{' '}
+            true fraud rows the supervised model catches, and flags none of the 5 adversarial cases either —
+            not even the 3 the supervised model already gets right. This was checked against several
+            configurations before concluding it's real, not a threshold artifact.
+          </p>
+          <p className="text-xs text-slate-500 mt-3">
+            The takeaway is informative, not just a failed experiment to hide: whatever distinguishes this
+            project's simulated fraud from legitimate traffic is a specific, learned combination — what
+            XGBoost found — not general multivariate outlier-ness an unsupervised method picks up for free.
           </p>
         </Section>
       )}

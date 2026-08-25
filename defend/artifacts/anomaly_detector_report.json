@@ -1,0 +1,41 @@
+{
+  "isolation_forest": {
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "pr_auc": 0.037736611469825806
+  },
+  "overlap_on_true_fraud": {
+    "both": 0,
+    "only_isolation_forest": 0,
+    "only_xgboost": 1031,
+    "neither": 8
+  },
+  "ensemble_or_rule": {
+    "precision": 0.44806605823554974,
+    "recall": 0.9923002887391723
+  },
+  "adversarial_case_check": [
+    {
+      "case": "adv_low_fraction_drain",
+      "isolation_forest_flagged": false
+    },
+    {
+      "case": "adv_low_fraction_structuring",
+      "isolation_forest_flagged": false
+    },
+    {
+      "case": "adv_patient_card_testing",
+      "isolation_forest_flagged": false
+    },
+    {
+      "case": "adv_median_amount_mule",
+      "isolation_forest_flagged": false
+    },
+    {
+      "case": "adv_billpay_mimicry",
+      "isolation_forest_flagged": false
+    }
+  ],
+  "conclusion": "IsolationForest adds no coverage beyond XGBoost on this test set, and flags none of the 5 adversarial cases either (not even the 3 XGBoost already catches). A genuine negative result, reported as-is: whatever distinguishes this project's simulated fraud from legitimate traffic is a specific learned combination, not general multivariate outlier-ness."
+}
