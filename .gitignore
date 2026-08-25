@@ -1,0 +1,14 @@
+data/raw/*.csv
+data/processed/*
+!data/processed/.gitkeep
+data/synthetic/*
+!data/synthetic/.gitkeep
+defend/artifacts/
+__pycache__/
+*.pyc
+.venv/
+venv/
+node_modules/
+webapp/frontend/dist/
+.env
+*.log
