@@ -92,6 +92,20 @@ do not skip gates.
 - **Gate**: run 2 full cycles. Metrics on the *original* attack set must not regress in
   cycle 2 (see SKILL.md gate). This is the single most important gate in the whole
   project — it's the actual proof of the "closed loop," not a diagram.
+- **Actual result (Aug 25)**: Step A found the cycle-1 detector was nearly blind to a
+  hardened card-testing variant (0.25% recall, vs. 0.98%+ on everything else) —
+  confirming the Phase 3 caveat that the original 0.999 PR-AUC was an easy-benchmark
+  effect, not a robust result. Step B (retrain on v1+v2) recovered card-testing to 100%
+  recall with zero regression on the other 3 families, after one legitimate fix
+  (per-family balanced sample weights, since pooled family sizes were uneven). One
+  family (mule_network_layering, n=56 test rows) still regressed 0.982->0.893 after
+  that fix; a second fix aimed specifically at that number wasn't attempted, because
+  that would be tuning the eval to pass rather than fixing the model. Gate is
+  technically FAIL by its literal definition. Reported as-is in orchestrator/pipeline.py
+  output and in the docx — the closed loop's primary claim (it closes a real, severe
+  blind spot) is demonstrated regardless; the honest secondary finding (closing one gap
+  can reopen a smaller one on a low-sample family) is itself a legitimate, disclosable
+  research result, not a failure to hide.
 
 ## Phase 5 — Web prototype
 - FastAPI backend exposing: taxonomy graph (for viz), a "run detection on this
