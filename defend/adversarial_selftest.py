@@ -11,6 +11,7 @@ Each case is designed to specifically target a feature the model is known to rel
 amounts near the legitimate median, or a "patient" attacker who spreads activity far
 beyond what Phase 4's hardening already tried.
 """
+import json
 import sys
 from pathlib import Path
 
@@ -137,13 +138,31 @@ def main():
         print(f"{name}: {'CAUGHT' if caught else 'EVADED'} (max fraud probability across "
               f"{len(case_df)} rows: {max_proba:.4f})")
         print(f"  {description}\n")
-        results.append({"case": name, "caught": caught, "max_proba": max_proba})
+        results.append({
+            "case": name, "caught": caught, "max_fraud_probability": max_proba,
+            "description": description, "n_rows": len(case_df),
+        })
 
     n_caught = sum(r["caught"] for r in results)
     print(f"Summary: {n_caught}/{len(results)} hand-crafted evasion attempts were still caught.")
     if n_caught < len(results):
         print("This is a real, disclosed limitation, not a hidden one -- report exactly "
               "which cases evaded detection and why, in the docx's limitations section.")
+
+    report = {
+        "cases": results,
+        "n_caught": n_caught,
+        "n_total": len(results),
+        "summary": (
+            f"{n_caught}/{len(results)} hand-crafted attacks, specifically designed to look "
+            "numerically unremarkable (amounts near the real backbone's own median, few hops, "
+            "no extreme balance-fraction ratios), were still caught by the final detector. This "
+            "tests generalization to attacks structurally different from anything in training -- "
+            "a harder and more honest question than Phase 4's in-family hardening test."
+        ),
+    }
+    (ARTIFACTS_DIR / "adversarial_selftest_report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(f"\nReport written to {ARTIFACTS_DIR / 'adversarial_selftest_report.json'}")
 
 
 if __name__ == "__main__":

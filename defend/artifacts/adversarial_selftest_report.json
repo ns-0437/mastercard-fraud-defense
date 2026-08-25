@@ -1,0 +1,42 @@
+{
+  "cases": [
+    {
+      "case": "adv_low_fraction_drain",
+      "caught": true,
+      "max_fraud_probability": 0.9995607733726501,
+      "description": "ATO drain of only 40% of balance in one step, well below the 85-98% pattern trained on.",
+      "n_rows": 1
+    },
+    {
+      "case": "adv_low_fraction_structuring",
+      "caught": false,
+      "max_fraud_probability": 0.1313059777021408,
+      "description": "Structuring at ~40% of the reporting threshold, well below the trained 70-97% band.",
+      "n_rows": 4
+    },
+    {
+      "case": "adv_patient_card_testing",
+      "caught": true,
+      "max_fraud_probability": 0.9999377727508545,
+      "description": "Only 2 card-testing probes, ~24 weeks apart -- far more patient than Phase 4's hardened 1-day-spread variant that already evaded the cycle-1 model.",
+      "n_rows": 2
+    },
+    {
+      "case": "adv_median_amount_mule",
+      "caught": true,
+      "max_fraud_probability": 0.9863440990447998,
+      "description": "2-hop mule layering with amount set to PaySim's real TRANSFER median ($9,482), far fewer hops/accounts than the trained mule pattern.",
+      "n_rows": 2
+    },
+    {
+      "case": "adv_billpay_mimicry",
+      "caught": false,
+      "max_fraud_probability": 4.0134706068784e-05,
+      "description": "Recurring same-amount payments to one destination mimicking legitimate bill-pay, no drain/burst/threshold pattern at all -- an ATO operator making the compromised account's payment activity look completely routine.",
+      "n_rows": 5
+    }
+  ],
+  "n_caught": 3,
+  "n_total": 5,
+  "summary": "3/5 hand-crafted attacks, specifically designed to look numerically unremarkable (amounts near the real backbone's own median, few hops, no extreme balance-fraction ratios), were still caught by the final detector. This tests generalization to attacks structurally different from anything in training -- a harder and more honest question than Phase 4's in-family hardening test."
+}
