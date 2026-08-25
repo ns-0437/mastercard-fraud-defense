@@ -8,6 +8,7 @@ Generate pillar queries to pick attack families and blend techniques across chan
 and what the web prototype visualizes to demonstrate diversity.
 """
 import json
+import math
 from itertools import combinations
 from pathlib import Path
 
@@ -39,10 +40,40 @@ def build_graph() -> nx.Graph:
     return g
 
 
+def _clustered_layout(g: nx.Graph) -> dict:
+    """A plain spring_layout over all 21 nodes at once renders as an undifferentiated
+    hairball once 83 cross-cutting edges are drawn -- it makes real diversity look like
+    clutter instead of structure. Placing each channel's nodes in their own region
+    (a mini spring_layout run per channel, positioned around a shared center) makes the
+    8-channel structure visible at a glance before a viewer reads a single label, and
+    the cross-channel edges that remain read as genuine "shared technique" bridges
+    rather than background noise.
+    """
+    channels: dict[str, list[str]] = {}
+    for n, data in g.nodes(data=True):
+        channels.setdefault(data["channel"], []).append(n)
+
+    n_channels = len(channels)
+    cluster_radius = 1.0
+    local_spread = 0.32
+    layout = {}
+    for i, (channel, node_ids) in enumerate(sorted(channels.items())):
+        angle = 2 * math.pi * i / n_channels
+        cx, cy = cluster_radius * math.cos(angle), cluster_radius * math.sin(angle)
+        subgraph = g.subgraph(node_ids)
+        if len(node_ids) == 1:
+            local = {node_ids[0]: (0.0, 0.0)}
+        else:
+            local = nx.spring_layout(subgraph, seed=42, k=0.9)
+        for n, (lx, ly) in local.items():
+            layout[n] = (cx + lx * local_spread, cy + ly * local_spread)
+    return layout
+
+
 def to_json(g: nx.Graph) -> dict:
     # Precomputed layout so the web frontend can render a plain SVG with static
     # coordinates -- no client-side force-layout library/dependency needed.
-    layout = nx.spring_layout(g, seed=42, k=0.6)
+    layout = _clustered_layout(g)
     return {
         "nodes": [
             {"id": n, "x": float(layout[n][0]), "y": float(layout[n][1]), **data}

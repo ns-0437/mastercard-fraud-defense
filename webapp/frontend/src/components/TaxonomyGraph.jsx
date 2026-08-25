@@ -19,6 +19,8 @@ const PAD = 60
 export default function TaxonomyGraph() {
   const [data, setData] = useState(null)
   const [selected, setSelected] = useState(null)
+  const [hovered, setHovered] = useState(null)
+  const [channelFilter, setChannelFilter] = useState(null)
   const [error, setError] = useState(null)
 
   useEffect(() => {
@@ -43,38 +45,64 @@ export default function TaxonomyGraph() {
   const posById = Object.fromEntries(data.nodes.map((n) => [n.id, { x: scaleX(n.x), y: scaleY(n.y) }]))
 
   const selectedNode = data.nodes.find((n) => n.id === selected)
+  const active = hovered || selected
 
   return (
     <div className="flex gap-6">
       <div className="flex-1 bg-slate-900 rounded-xl border border-slate-800 p-4">
         <p className="text-sm text-slate-400 mb-2">
-          {data.nodes.length} attack vectors · {data.edges.length} shared-technique links · click a node for detail
+          {data.nodes.length} attack vectors across 8 channels · {data.edges.length} shared-technique links ·
+          hover to preview, click for detail, click a channel below to isolate it
         </p>
         <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-[560px]">
           {data.edges.map((e, i) => {
             const a = posById[e.source], b = posById[e.target]
             if (!a || !b) return null
+            const touchesActive = active && (e.source === active || e.target === active)
+            const srcNode = data.nodes.find((n) => n.id === e.source)
+            const dstNode = data.nodes.find((n) => n.id === e.target)
+            if (channelFilter && srcNode.channel !== channelFilter && dstNode.channel !== channelFilter) return null
             return (
               <line
                 key={i}
                 x1={a.x} y1={a.y} x2={b.x} y2={b.y}
-                stroke="#334155" strokeWidth={1}
-                opacity={selected && (e.source === selected || e.target === selected) ? 0.9 : 0.25}
+                stroke={touchesActive ? '#5eead4' : '#334155'} strokeWidth={touchesActive ? 1.5 : 1}
+                opacity={touchesActive ? 0.9 : 0.12}
               />
             )
           })}
           {data.nodes.map((n) => {
             const p = posById[n.id]
             const isSel = n.id === selected
+            const isHov = n.id === hovered
+            const dimmed = channelFilter && n.channel !== channelFilter
             return (
-              <g key={n.id} onClick={() => setSelected(n.id)} className="cursor-pointer">
+              <g
+                key={n.id}
+                onClick={() => setSelected(n.id)}
+                onMouseEnter={() => setHovered(n.id)}
+                onMouseLeave={() => setHovered(null)}
+                className="cursor-pointer"
+                opacity={dimmed ? 0.15 : 1}
+              >
                 <circle
-                  cx={p.x} cy={p.y} r={isSel ? 12 : 8}
+                  cx={p.x} cy={p.y} r={isSel ? 13 : isHov ? 10 : 7}
                   fill={CHANNEL_COLORS[n.channel] || '#94a3b8'}
-                  stroke={isSel ? '#fff' : 'none'} strokeWidth={2}
+                  stroke={isSel ? '#fff' : isHov ? '#94a3b8' : 'none'} strokeWidth={2}
                 />
-                <text x={p.x + 12} y={p.y + 4} fontSize={10} fill="#cbd5e1">
-                  {n.name.length > 28 ? n.name.slice(0, 26) + '…' : n.name}
+                {(isSel || isHov) && (
+                  <rect
+                    x={p.x + 10} y={p.y - 8} width={Math.min(220, n.name.length * 5.6 + 8)} height={16}
+                    fill="#020617" opacity={0.85} rx={3}
+                  />
+                )}
+                <text
+                  x={p.x + 14} y={p.y + 4}
+                  fontSize={isSel || isHov ? 11 : 9}
+                  fill={isSel || isHov ? '#f1f5f9' : '#cbd5e1'}
+                  opacity={isSel || isHov ? 1 : 0.75}
+                >
+                  {(isSel || isHov) ? n.name : (n.name.length > 22 ? n.name.slice(0, 20) + '…' : n.name)}
                 </text>
               </g>
             )
@@ -82,10 +110,16 @@ export default function TaxonomyGraph() {
         </svg>
         <div className="flex flex-wrap gap-3 mt-2 text-xs">
           {Object.entries(CHANNEL_COLORS).map(([channel, color]) => (
-            <span key={channel} className="flex items-center gap-1.5 text-slate-400">
+            <button
+              key={channel}
+              onClick={() => setChannelFilter(channelFilter === channel ? null : channel)}
+              className={`flex items-center gap-1.5 px-1.5 py-0.5 rounded transition-colors ${
+                channelFilter === channel ? 'bg-slate-800 text-slate-200' : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
               <span className="w-2.5 h-2.5 rounded-full inline-block" style={{ background: color }} />
               {channel}
-            </span>
+            </button>
           ))}
         </div>
       </div>
