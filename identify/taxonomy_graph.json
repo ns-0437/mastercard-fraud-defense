@@ -2,8 +2,8 @@
   "nodes": [
     {
       "id": "cnp_ai_card_testing",
-      "x": -1.0271067811865473,
-      "y": 1.0222743801059027,
+      "x": -0.7078013433459085,
+      "y": 0.6164953930218046,
       "name": "AI-orchestrated card testing / BIN attack",
       "channel": "card-not-present",
       "mechanism": "An LLM-driven agent automates rapid low-value authorization attempts across a range of card numbers (BIN ranges), adapting amount, merchant category, and timing per-attempt based on which prior attempts were declined vs. flagged, to find live card numbers while staying under naive velocity thresholds.",
@@ -17,8 +17,8 @@
     },
     {
       "id": "cnp_llm_dispute_narratives",
-      "x": -0.38710678118654746,
-      "y": 0.39193918226719265,
+      "x": -0.612198656654091,
+      "y": 1.1707516514438452,
       "name": "LLM-generated friendly-fraud chargeback narratives",
       "channel": "card-not-present",
       "mechanism": "An LLM generates individually-tailored, plausible dispute narratives ('item never arrived', 'unauthorized use') at scale for chargebacks on legitimately-received goods, each narrative varied enough to avoid text-similarity fraud flags across disputes filed by the same actor or ring.",
@@ -32,8 +32,8 @@
     },
     {
       "id": "ato_deepfake_voice_ivr",
-      "x": 0.7765696499799385,
-      "y": -0.32,
+      "x": 0.9233809500563849,
+      "y": 0.30745378918228305,
       "name": "Deepfake voice bypass of IVR/call-center voice biometrics",
       "channel": "account-takeover",
       "mechanism": "Cloned voice audio (from short public samples: social media, voicemail) is used to pass voice-biometric authentication or to convincingly impersonate the account holder to a human call center agent for password/payment-method resets.",
@@ -47,8 +47,8 @@
     },
     {
       "id": "ato_llm_support_pretexting",
-      "x": 1.0699167098724436,
-      "y": 0.1967509642324345,
+      "x": 1.1864768368778027,
+      "y": -0.2477651081030787,
       "name": "LLM-adaptive social engineering of support agents",
       "channel": "account-takeover",
       "mechanism": "An operator (or an autonomous agent) uses an LLM to generate and adapt a pretext in real time during a live chat/call with a bank's customer support, answering verification questions plausibly using previously breached/scraped personal data and adjusting the story when challenged, to get a payment method changed or MFA reset.",
@@ -62,8 +62,8 @@
     },
     {
       "id": "ato_sim_swap_orchestration",
-      "x": 1.153513640147618,
-      "y": 0.12324903576756559,
+      "x": 1.083435909481482,
+      "y": -0.32,
       "name": "LLM-orchestrated SIM-swap social engineering",
       "channel": "account-takeover",
       "mechanism": "An LLM-scripted campaign targets telecom support with tailored pretexts (built from OSINT on the victim) to port a victim's number to an attacker-controlled SIM, intercepting SMS-based OTPs used for payment authentication.",
@@ -77,8 +77,8 @@
     },
     {
       "id": "kyc_synthetic_identity_docs",
-      "x": -0.6371900713141041,
-      "y": -0.5103558169541129,
+      "x": -0.7792936957932932,
+      "y": -0.6334219938141651,
       "name": "LLM-generated synthetic identity + consistent backstory",
       "channel": "kyc-onboarding",
       "mechanism": "An LLM generates an internally-consistent synthetic identity (name, address history, employment, answers to knowledge-based verification questions) paired with generative-image-model forged ID documents, used to pass onboarding KYC for a new account or credit line with no real underlying person.",
@@ -92,8 +92,8 @@
     },
     {
       "id": "kyc_deepfake_video_liveness",
-      "x": -0.9305371312066092,
-      "y": -1.0271067811865475,
+      "x": -0.957994528630509,
+      "y": -0.17999999999999972,
       "name": "Deepfake bypass of video/liveness KYC checks",
       "channel": "kyc-onboarding",
       "mechanism": "Real-time face-swap or fully synthetic video is injected (via virtual camera drivers) into a digital onboarding flow's liveness/selfie-match step, defeating 'blink/turn your head' liveness challenges and photo-ID face matching.",
@@ -107,8 +107,8 @@
     },
     {
       "id": "kyc_fraudulent_merchant_onboarding",
-      "x": -0.5535931410389298,
-      "y": -0.5838577454189818,
+      "x": -0.8607879869295143,
+      "y": -0.6865780061858344,
       "name": "AI-generated fraudulent merchant onboarding documents",
       "channel": "kyc-onboarding",
       "mechanism": "Generative models produce plausible business registration certificates, bank statements, and website content to onboard a shell merchant account, which is then used for laundering via fake sales (a card-present or card-not-present 'transaction laundering' front).",
@@ -122,8 +122,8 @@
     },
     {
       "id": "agentic_prompt_injection_checkout",
-      "x": 1.0271067811865475,
-      "y": 0.39193918226719265,
+      "x": 0.7538267471303475,
+      "y": 0.8047262476594064,
       "name": "Prompt injection against autonomous shopping/payment agents",
       "channel": "agentic-commerce",
       "mechanism": "A malicious merchant page embeds hidden instructions (in page text, alt text, or metadata) that hijack an AI shopping agent's reasoning when it visits the page, causing it to authorize a purchase, change a shipping address, or approve a higher price than the user intended.",
@@ -137,8 +137,8 @@
     },
     {
       "id": "agentic_vendor_agent_manipulation",
-      "x": 0.3871067811865477,
-      "y": 1.0222743801059027,
+      "x": 0.65822406043853,
+      "y": 0.25046998923736574,
       "name": "Malicious vendor-agent manipulation of buyer-agent negotiation",
       "channel": "agentic-commerce",
       "mechanism": "In agent-to-agent commerce (a buying agent negotiating with a selling agent), a malicious selling agent exploits the buying agent's negotiation/comparison logic \u2014 e.g. false scarcity signals, fabricated competitor pricing \u2014 to induce an overpayment or an unauthorized recurring-payment commitment.",
@@ -152,8 +152,8 @@
     },
     {
       "id": "app_deepfake_executive_vishing",
-      "x": 0.11580788016350807,
-      "y": 1.3187029631147102,
+      "x": 0.7740526145414048,
+      "y": 1.029585461530272,
       "name": "Real-time deepfake video/voice executive impersonation (CEO fraud)",
       "channel": "authorized-push-payment",
       "mechanism": "A live, real-time deepfake video or voice call impersonates a company executive or trusted family member, creating urgency to induce an immediate authorized wire transfer or P2P payment, bypassing the victim's own fraud judgment entirely since the payment is technically 'authorized' by the real account holder.",
@@ -168,8 +168,8 @@
     },
     {
       "id": "app_voice_clone_p2p_scam",
-      "x": 0.32000000000000006,
-      "y": 0.8837208123509535,
+      "x": 0.3752773057268214,
+      "y": 0.5747107237002279,
       "name": "Voice-cloned 'trusted contact' P2P payment scam",
       "channel": "authorized-push-payment",
       "mechanism": "A cloned voice of a family member/friend (from short public audio) is used in a phone call claiming an emergency, requesting an urgent P2P payment (e.g. via a mobile payment app) to a new/unfamiliar recipient.",
@@ -183,8 +183,8 @@
     },
     {
       "id": "app_hyperpersonalized_phishing",
-      "x": -0.11580788016350808,
-      "y": 0.6812970368852895,
+      "x": 0.1800000000000001,
+      "y": 0.8949605669134981,
       "name": "LLM hyper-personalized phishing at scale",
       "channel": "authorized-push-payment",
       "mechanism": "An LLM ingests scraped social media, breached data, and public records per target to generate individually customized phishing messages (referencing real recent purchases, real contacts, real employer) that drive the victim to authorize a payment or reveal payment credentials, at a cost per message near zero.",
@@ -198,8 +198,8 @@
     },
     {
       "id": "app_romance_investment_bot",
-      "x": -0.3199999999999999,
-      "y": 1.1162791876490468,
+      "x": 0.7410984407665571,
+      "y": 0.6543221764186473,
       "name": "LLM-driven long-con romance/investment scam chatbot",
       "channel": "authorized-push-payment",
       "mechanism": "An LLM conducts a sustained, multi-week conversational relationship (romance or investment-mentor framing) with a victim across many simultaneous targets, building trust before steering toward a fraudulent investment platform or a direct payment request ('pig butchering' style).",
@@ -213,8 +213,8 @@
     },
     {
       "id": "mule_synthetic_network_generation",
-      "x": 0.38710678118654746,
-      "y": -0.39193918226719265,
+      "x": 0.18000000000000016,
+      "y": -0.6284405954497173,
       "name": "AI-orchestrated synthetic mule account network",
       "channel": "mule-network",
       "mechanism": "Many synthetic identities (see kyc_synthetic_identity_docs) are onboarded as accounts, then an orchestration layer coordinates layered small transfers between them to obscure the path of laundered funds, with transfer amounts/timing generated to resemble organic peer-to-peer payment behavior.",
@@ -228,8 +228,8 @@
     },
     {
       "id": "mule_adaptive_layering_vs_aml",
-      "x": 1.0271067811865473,
-      "y": -1.0222743801059027,
+      "x": 0.5326938258206276,
+      "y": -0.7372722453388416,
       "name": "LLM-adaptive layering strategy responding to AML rule feedback",
       "channel": "mule-network",
       "mechanism": "An operator uses observed outcomes (which transfer patterns get flagged/frozen vs. clear) as feedback to an LLM-assisted strategy generator, iteratively adjusting transfer size, frequency, and routing to stay under a specific institution's AML thresholds.",
@@ -243,8 +243,8 @@
     },
     {
       "id": "adv_feature_evasion",
-      "x": -0.2078013433459089,
-      "y": -1.2495300107626341,
+      "x": -0.11580788016350832,
+      "y": -1.3187029631147105,
       "name": "Adversarial feature-space evasion of transaction fraud classifiers",
       "channel": "ml-defense-attack",
       "mechanism": "An attacker with query access (direct or via transferability from a similar public model) perturbs transaction features (amount, timing, merchant category sequencing) in the minimal way needed to cross a fraud classifier's decision boundary while keeping the underlying fraudulent transaction's economic intent intact.",
@@ -258,8 +258,8 @@
     },
     {
       "id": "adv_model_extraction_probing",
-      "x": 0.31999999999999984,
-      "y": -1.0551962368967722,
+      "x": 0.11580788016350783,
+      "y": -0.6812970368852898,
       "name": "Model extraction / decision-boundary probing via test transactions",
       "channel": "ml-defense-attack",
       "mechanism": "An attacker submits many small, deliberately varied test transactions to reverse-engineer which feature combinations a bank's fraud model treats as risky, building a surrogate model used to design future evasive transactions offline.",
@@ -273,8 +273,8 @@
     },
     {
       "id": "adv_feedback_loop_poisoning",
-      "x": -0.11219865665409146,
-      "y": -0.6952737523405935,
+      "x": 0.31999999999999984,
+      "y": -1.1162791876490465,
       "name": "Poisoning a fraud model's retraining feedback loop",
       "channel": "ml-defense-attack",
       "mechanism": "An attacker files disputes/chargebacks or manually 'confirms legitimate' fraudulent transactions to skew the labels a bank's fraud model retrains on, gradually shifting the model's decision boundary to be more permissive toward the attacker's future transaction patterns.",
@@ -288,8 +288,8 @@
     },
     {
       "id": "cross_fake_support_chatbot",
-      "x": -0.6799999999999999,
-      "y": -0.3151675989193548,
+      "x": -1.3199999999999998,
+      "y": 0.31516759891935514,
       "name": "GenAI-impersonated fake bank support chatbot",
       "channel": "cross-cutting",
       "mechanism": "A convincingly branded fake chatbot (via a phishing link or malicious ad) impersonates a bank's real AI support assistant, using an LLM to hold a plausible support conversation while harvesting payment credentials or authorizing a fraudulent 'refund' transfer.",
@@ -303,8 +303,8 @@
     },
     {
       "id": "cross_fake_cashback_bot",
-      "x": -1.3199999999999998,
-      "y": 0.31516759891935514,
+      "x": -0.6799999999999999,
+      "y": -0.3151675989193548,
       "name": "Fake AI 'refund/cashback' bot payment-authorization trick",
       "channel": "cross-cutting",
       "mechanism": "A bot impersonating a merchant or payment app's automated refund assistant walks a victim through steps that actually authorize an outbound payment or a bill-pay setup, framed misleadingly as receiving money rather than sending it.",
@@ -315,12 +315,199 @@
       ],
       "severity": "medium",
       "likelihood": "medium"
+    },
+    {
+      "id": "bnpl_bust_out_fraud",
+      "x": -0.5000000000000004,
+      "y": -0.8660254037844385,
+      "name": "Synthetic-identity 'bust-out' fraud against BNPL lenders",
+      "channel": "lending-bnpl",
+      "mechanism": "GenAI-generated synthetic identities (see kyc_synthetic_identity_docs) are specifically tuned to pass buy-now-pay-later underwriting, which is deliberately lighter-touch than credit card issuance. Many small BNPL credit lines are opened across many merchants/providers using the same synthetic identity, drawn down close to simultaneously, then defaulted on all at once before any single lender's fraud model connects the pattern across providers.",
+      "grounding": "Bust-out fraud against thin-file/light-underwriting lenders is a well-documented credit fraud pattern; BNPL's minimal-friction approval flow (designed for checkout conversion, not fraud resistance) is a newer, explicitly softer target than traditional credit issuance, and GenAI removes the manual effort of maintaining a consistent synthetic profile across many simultaneous applications.",
+      "techniques": [
+        "synthetic_identity",
+        "automation_at_scale"
+      ],
+      "severity": "high",
+      "likelihood": "medium"
+    },
+    {
+      "id": "instant_rail_finality_exploit",
+      "x": 0.42957163896521705,
+      "y": 1.1765480903595475,
+      "name": "Social engineering timed to exploit instant-payment-rail irrevocability",
+      "channel": "authorized-push-payment",
+      "mechanism": "An LLM-driven scam script is timed and structured specifically around real-time payment rails (FedNow, UK Faster Payments, UPI, PIX) where funds settle irrevocably in seconds \u2014 the pretext is engineered to create urgency precisely because the victim (and the bank) have no post-transaction reversal window to catch the fraud after the fact, unlike card rails with chargeback recourse.",
+      "grounding": "Regulators including the UK's Payment Systems Regulator and India's RBI have specifically flagged authorized-push-payment fraud growth as tied to real-time rail adoption, precisely because instant finality removes the reversal window that limits card-fraud losses; this is the payment-rail-level mechanism underlying several APP scams above, made explicit as its own vector because the finality property itself is what's being targeted, not just the social engineering pretext.",
+      "techniques": [
+        "llm_social_engineering",
+        "automation_at_scale"
+      ],
+      "severity": "high",
+      "likelihood": "high"
+    },
+    {
+      "id": "biometric_payment_spoofing",
+      "x": -0.8660254037844387,
+      "y": 0.49999999999999994,
+      "name": "AI-generated spoof against point-of-sale biometric payment authorization",
+      "channel": "card-present",
+      "mechanism": "Generative models produce a synthetic face, palm-vein, or fingerprint pattern designed to fool an in-person biometric payment terminal (e.g. palm-pay or face-pay checkout systems), distinct from onboarding-time liveness bypass \u2014 this targets the AUTHORIZATION step of an in-person transaction on an already-enrolled biometric credential, using presentation-attack techniques informed by generative modeling of the sensor's expected input.",
+      "grounding": "Biometric point-of-sale payment (palm/face pay) is being actively deployed at retail; presentation attacks against biometric sensors (spoof fingerprints, photos/masks fooling face sensors) are a long-documented security research area now gaining a direct financial payment-authorization target as these terminals roll out.",
+      "techniques": [
+        "identity_spoofing",
+        "adversarial_ml"
+      ],
+      "severity": "medium",
+      "likelihood": "low"
+    },
+    {
+      "id": "ai_forged_dispute_evidence",
+      "x": -0.17999999999999977,
+      "y": 0.8108291668876665,
+      "name": "AI-forged supporting evidence for fraudulent chargeback disputes",
+      "channel": "card-not-present",
+      "mechanism": "Beyond varying dispute narrative TEXT (see cnp_llm_dispute_narratives), an image-generation model forges the supporting EVIDENCE a chargeback review actually checks \u2014 fake 'item arrived damaged' photos, forged delivery/tracking screenshots, doctored return-shipment receipts \u2014 each generated fresh per dispute so no two submissions share a detectable duplicate image.",
+      "grounding": "Chargeback/friendly-fraud reviews often weight photographic and documentary evidence heavily precisely because it was hard to forge convincingly at scale; modern image generation removes that cost, directly undermining a control merchants and issuers currently rely on.",
+      "techniques": [
+        "automation_at_scale",
+        "identity_document_forgery"
+      ],
+      "severity": "medium",
+      "likelihood": "medium"
+    },
+    {
+      "id": "corridor_arbitrage_laundering",
+      "x": 0.38494211119666055,
+      "y": -0.9332726035791277,
+      "name": "AI-optimized cross-border corridor selection for layering",
+      "channel": "mule-network",
+      "mechanism": "An LLM continuously ingests scraped regulatory enforcement actions, AML program news, and provider policy changes across many countries and remittance providers, then recommends which corridor/provider combination currently has the weakest effective controls for routing the next layering hop \u2014 re-optimizing as corridors get tightened, instead of a launderer relying on static, out-of-date expert knowledge.",
+      "grounding": "Regulatory arbitrage across weaker-AML jurisdictions and providers is a known real-world laundering strategy; what previously required an experienced human launderer's up-to-date knowledge of the regulatory landscape is now a continuously-refreshed automated research task.",
+      "techniques": [
+        "adversarial_evasion",
+        "automation_at_scale"
+      ],
+      "severity": "high",
+      "likelihood": "low"
+    },
+    {
+      "id": "synthetic_referral_reward_fraud",
+      "x": 0.8660254037844384,
+      "y": -0.5000000000000004,
+      "name": "Synthetic-identity farming against referral/cashback reward programs",
+      "channel": "rewards-fraud",
+      "mechanism": "GenAI mass-produces synthetic identities and device fingerprints specifically to farm real cash payouts from fintech referral bonuses, sign-up incentives, and cashback programs \u2014 each synthetic 'user' completes just enough qualifying activity to trigger a payout before being abandoned, at a volume no human fraud ring could sustain manually.",
+      "grounding": "Promotion/referral abuse is an established, budgeted fraud-loss category at consumer fintech apps specifically because these programs pay out real money for low-friction actions; GenAI's cost advantage is in identity/device diversity at a volume that defeats simple duplicate-detection heuristics.",
+      "techniques": [
+        "synthetic_identity",
+        "automation_at_scale"
+      ],
+      "severity": "medium",
+      "likelihood": "high"
+    },
+    {
+      "id": "vendor_payment_redirection_bec",
+      "x": 6.123233995736766e-17,
+      "y": 1.0,
+      "name": "LLM-drafted vendor payment redirection (business email compromise)",
+      "channel": "b2b-payments",
+      "mechanism": "An LLM drafts a contextually precise email impersonating an existing, legitimate vendor, requesting that a company's accounts-payable team update the vendor's bank details on file ahead of a real, already-expected invoice payment \u2014 distinct from urgent-wire CEO-fraud vishing, this targets vendor MASTER DATA so that a subsequent, entirely routine invoice payment silently goes to the attacker's account with no urgency cues to raise suspicion.",
+      "grounding": "Vendor email compromise / payment redirection is one of the largest reported categories of business email compromise loss (FBI IC3 consistently ranks BEC among the highest-dollar-loss cybercrime categories); LLM drafting removes the language/context mistakes that currently help AP teams catch a fraction of these attempts.",
+      "techniques": [
+        "llm_social_engineering",
+        "identity_spoofing"
+      ],
+      "severity": "high",
+      "likelihood": "high"
+    },
+    {
+      "id": "risk_engine_shaping_3ds_evasion",
+      "x": -0.3200000000000001,
+      "y": -0.8837208123509532,
+      "name": "Adversarial transaction shaping to avoid 3-D Secure step-up challenges",
+      "channel": "ml-defense-attack",
+      "mechanism": "An attacker probes an issuer's 3DS2 risk-based authentication (which decides whether a transaction is routed 'frictionless,' i.e. no challenge, or gets a step-up challenge) and uses an LLM-assisted search over transaction attributes (amount, merchant category, device/browser fingerprint signals) to find combinations that reliably score as low-risk enough to skip the challenge entirely, then shapes fraudulent transactions to match.",
+      "grounding": "3DS2's frictionless flow is explicitly designed around issuer risk scoring to reduce checkout friction for low-risk transactions; adversarial shaping of transaction attributes to stay under a known or inferred risk threshold is a direct extension of the adversarial-evasion research already covered by adv_feature_evasion, applied specifically to the 3DS step-up decision rather than a generic fraud score.",
+      "techniques": [
+        "adversarial_ml",
+        "adversarial_evasion"
+      ],
+      "severity": "medium",
+      "likelihood": "low"
+    },
+    {
+      "id": "romance_scam_mule_recruitment",
+      "x": 0.6189813019893278,
+      "y": -1.1247506948588035,
+      "name": "Romance-scam chatbot recruiting the victim as an unwitting money mule",
+      "channel": "mule-network",
+      "mechanism": "Rather than asking the romance-scam victim (see app_romance_investment_bot) for money directly, the LLM instead persuades them to receive funds into their OWN real bank account on the scammer's behalf ('help my business partner') and forward them onward \u2014 using the victim's real, unflagged account as a mule hop, which is structurally different from and harder to detect than a synthetic mule account with no transaction history.",
+      "grounding": "Recruiting real, otherwise-legitimate people as unwitting money mules through romance/relationship manipulation is a specifically named, heavily reported pattern in FBI IC3 and UK Action Fraud data, distinct from synthetic-identity mule networks precisely because the account itself has genuine history and passes ordinary KYC.",
+      "techniques": [
+        "llm_social_engineering",
+        "automation_at_scale"
+      ],
+      "severity": "high",
+      "likelihood": "high"
+    },
+    {
+      "id": "deepfake_reverification_takeover",
+      "x": 0.8067063035843303,
+      "y": 0.26031131892079573,
+      "name": "Deepfake of an existing customer to pass step-up re-verification",
+      "channel": "account-takeover",
+      "mechanism": "Distinct from onboarding a brand-new synthetic identity, this targets an EXISTING real customer's account: when a bank triggers step-up video re-verification for a high-risk action (large withdrawal, beneficiary change, contact-detail update), the attacker presents a deepfake built from the real customer's public photos/videos to pass that specific challenge and push the change through.",
+      "grounding": "Video re-verification as a step-up control for high-risk account changes is increasingly common at digital banks; it assumes liveness checks are hard to fool with a real (not synthetic) target's likeness, an assumption deepfake generation quality has been eroding.",
+      "techniques": [
+        "deepfake_video",
+        "identity_spoofing"
+      ],
+      "severity": "high",
+      "likelihood": "medium"
+    },
+    {
+      "id": "agentic_return_fraud",
+      "x": 1.1860254037844387,
+      "y": 0.4448037631032277,
+      "name": "Prompt-manipulated AI shopping agent approving fraudulent returns",
+      "channel": "agentic-commerce",
+      "mechanism": "An AI customer-service agent with authority to approve refunds/returns is fed fabricated conversational claims (item never arrived, wrong item shipped) crafted to exploit the agent's tendency to trust user-supplied context more readily than a trained human rep would apply skepticism, at a volume automated across many orders/accounts.",
+      "grounding": "Return fraud and 'wardrobing' already cost retailers billions annually with human-staffed support lines providing some resistance; handing refund-approval authority to an AI agent without equivalent skepticism calibration is a predictable new attack surface as retailers adopt agentic customer service.",
+      "techniques": [
+        "prompt_injection",
+        "llm_social_engineering"
+      ],
+      "severity": "medium",
+      "likelihood": "medium"
+    },
+    {
+      "id": "mule_job_scam_recruitment",
+      "x": 0.7833827609933843,
+      "y": -0.906390879695703,
+      "name": "GenAI-generated fake job postings recruiting money mules",
+      "channel": "mule-network",
+      "mechanism": "LLMs mass-generate fake 'payment processing agent' or 'remote finance assistant' job postings, each with locally-tailored fake company branding and job-board-appropriate phrasing, posted at scale across many job boards and social platforms to recruit real people (knowingly or not) into opening or operating bank accounts as mules for a advertised 'salary' or 'commission.'",
+      "grounding": "Money-mule recruitment via fake job postings is a specifically named, actively warned-about pattern (UK NCA, Europol both run public awareness campaigns against exactly this vector); GenAI's contribution is generating many distinct, locally-plausible fake postings/company fronts instead of one reused template that's easy to pattern-match.",
+      "techniques": [
+        "llm_social_engineering",
+        "automation_at_scale"
+      ],
+      "severity": "medium",
+      "likelihood": "high"
     }
   ],
   "edges": [
     {
       "source": "cnp_ai_card_testing",
       "target": "adv_model_extraction_probing",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "cnp_ai_card_testing",
+      "target": "ai_forged_dispute_evidence",
       "shared_techniques": [
         "automation_at_scale"
       ]
@@ -355,7 +542,29 @@
     },
     {
       "source": "cnp_ai_card_testing",
+      "target": "bnpl_bust_out_fraud",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "cnp_ai_card_testing",
       "target": "cnp_llm_dispute_narratives",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "cnp_ai_card_testing",
+      "target": "corridor_arbitrage_laundering",
+      "shared_techniques": [
+        "automation_at_scale",
+        "adversarial_evasion"
+      ]
+    },
+    {
+      "source": "cnp_ai_card_testing",
+      "target": "instant_rail_finality_exploit",
       "shared_techniques": [
         "automation_at_scale"
       ]
@@ -366,6 +575,27 @@
       "shared_techniques": [
         "automation_at_scale",
         "adversarial_evasion"
+      ]
+    },
+    {
+      "source": "cnp_ai_card_testing",
+      "target": "mule_job_scam_recruitment",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "cnp_ai_card_testing",
+      "target": "romance_scam_mule_recruitment",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "cnp_ai_card_testing",
+      "target": "synthetic_referral_reward_fraud",
+      "shared_techniques": [
+        "automation_at_scale"
       ]
     },
     {
@@ -390,8 +620,22 @@
       ]
     },
     {
+      "source": "cnp_ai_card_testing",
+      "target": "risk_engine_shaping_3ds_evasion",
+      "shared_techniques": [
+        "adversarial_evasion"
+      ]
+    },
+    {
       "source": "cnp_llm_dispute_narratives",
       "target": "adv_model_extraction_probing",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "cnp_llm_dispute_narratives",
+      "target": "ai_forged_dispute_evidence",
       "shared_techniques": [
         "automation_at_scale"
       ]
@@ -430,9 +674,61 @@
     },
     {
       "source": "cnp_llm_dispute_narratives",
+      "target": "bnpl_bust_out_fraud",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "cnp_llm_dispute_narratives",
+      "target": "corridor_arbitrage_laundering",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "cnp_llm_dispute_narratives",
+      "target": "instant_rail_finality_exploit",
+      "shared_techniques": [
+        "automation_at_scale",
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "cnp_llm_dispute_narratives",
       "target": "mule_adaptive_layering_vs_aml",
       "shared_techniques": [
         "automation_at_scale"
+      ]
+    },
+    {
+      "source": "cnp_llm_dispute_narratives",
+      "target": "mule_job_scam_recruitment",
+      "shared_techniques": [
+        "automation_at_scale",
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "cnp_llm_dispute_narratives",
+      "target": "romance_scam_mule_recruitment",
+      "shared_techniques": [
+        "automation_at_scale",
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "cnp_llm_dispute_narratives",
+      "target": "synthetic_referral_reward_fraud",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "cnp_llm_dispute_narratives",
+      "target": "agentic_return_fraud",
+      "shared_techniques": [
+        "llm_social_engineering"
       ]
     },
     {
@@ -464,6 +760,13 @@
       ]
     },
     {
+      "source": "cnp_llm_dispute_narratives",
+      "target": "vendor_payment_redirection_bec",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
       "source": "ato_deepfake_voice_ivr",
       "target": "app_deepfake_executive_vishing",
       "shared_techniques": [
@@ -475,6 +778,13 @@
       "target": "app_voice_clone_p2p_scam",
       "shared_techniques": [
         "deepfake_audio"
+      ]
+    },
+    {
+      "source": "ato_deepfake_voice_ivr",
+      "target": "biometric_payment_spoofing",
+      "shared_techniques": [
+        "identity_spoofing"
       ]
     },
     {
@@ -487,6 +797,13 @@
     {
       "source": "ato_deepfake_voice_ivr",
       "target": "cross_fake_support_chatbot",
+      "shared_techniques": [
+        "identity_spoofing"
+      ]
+    },
+    {
+      "source": "ato_deepfake_voice_ivr",
+      "target": "deepfake_reverification_takeover",
       "shared_techniques": [
         "identity_spoofing"
       ]
@@ -499,8 +816,22 @@
       ]
     },
     {
+      "source": "ato_deepfake_voice_ivr",
+      "target": "vendor_payment_redirection_bec",
+      "shared_techniques": [
+        "identity_spoofing"
+      ]
+    },
+    {
       "source": "ato_llm_support_pretexting",
       "target": "adv_model_extraction_probing",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "ato_llm_support_pretexting",
+      "target": "ai_forged_dispute_evidence",
       "shared_techniques": [
         "automation_at_scale"
       ]
@@ -531,9 +862,61 @@
     },
     {
       "source": "ato_llm_support_pretexting",
+      "target": "bnpl_bust_out_fraud",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "ato_llm_support_pretexting",
+      "target": "corridor_arbitrage_laundering",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "ato_llm_support_pretexting",
+      "target": "instant_rail_finality_exploit",
+      "shared_techniques": [
+        "automation_at_scale",
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "ato_llm_support_pretexting",
       "target": "mule_adaptive_layering_vs_aml",
       "shared_techniques": [
         "automation_at_scale"
+      ]
+    },
+    {
+      "source": "ato_llm_support_pretexting",
+      "target": "mule_job_scam_recruitment",
+      "shared_techniques": [
+        "automation_at_scale",
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "ato_llm_support_pretexting",
+      "target": "romance_scam_mule_recruitment",
+      "shared_techniques": [
+        "automation_at_scale",
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "ato_llm_support_pretexting",
+      "target": "synthetic_referral_reward_fraud",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "ato_llm_support_pretexting",
+      "target": "agentic_return_fraud",
+      "shared_techniques": [
+        "llm_social_engineering"
       ]
     },
     {
@@ -565,8 +948,22 @@
       ]
     },
     {
+      "source": "ato_llm_support_pretexting",
+      "target": "vendor_payment_redirection_bec",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
       "source": "ato_sim_swap_orchestration",
       "target": "adv_model_extraction_probing",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "ato_sim_swap_orchestration",
+      "target": "ai_forged_dispute_evidence",
       "shared_techniques": [
         "automation_at_scale"
       ]
@@ -589,9 +986,61 @@
     },
     {
       "source": "ato_sim_swap_orchestration",
+      "target": "bnpl_bust_out_fraud",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "ato_sim_swap_orchestration",
+      "target": "corridor_arbitrage_laundering",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "ato_sim_swap_orchestration",
+      "target": "instant_rail_finality_exploit",
+      "shared_techniques": [
+        "automation_at_scale",
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "ato_sim_swap_orchestration",
       "target": "mule_adaptive_layering_vs_aml",
       "shared_techniques": [
         "automation_at_scale"
+      ]
+    },
+    {
+      "source": "ato_sim_swap_orchestration",
+      "target": "mule_job_scam_recruitment",
+      "shared_techniques": [
+        "automation_at_scale",
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "ato_sim_swap_orchestration",
+      "target": "romance_scam_mule_recruitment",
+      "shared_techniques": [
+        "automation_at_scale",
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "ato_sim_swap_orchestration",
+      "target": "synthetic_referral_reward_fraud",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "ato_sim_swap_orchestration",
+      "target": "agentic_return_fraud",
+      "shared_techniques": [
+        "llm_social_engineering"
       ]
     },
     {
@@ -623,6 +1072,20 @@
       ]
     },
     {
+      "source": "ato_sim_swap_orchestration",
+      "target": "vendor_payment_redirection_bec",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "kyc_synthetic_identity_docs",
+      "target": "bnpl_bust_out_fraud",
+      "shared_techniques": [
+        "synthetic_identity"
+      ]
+    },
+    {
       "source": "kyc_synthetic_identity_docs",
       "target": "kyc_fraudulent_merchant_onboarding",
       "shared_techniques": [
@@ -635,6 +1098,27 @@
       "target": "mule_synthetic_network_generation",
       "shared_techniques": [
         "synthetic_identity"
+      ]
+    },
+    {
+      "source": "kyc_synthetic_identity_docs",
+      "target": "synthetic_referral_reward_fraud",
+      "shared_techniques": [
+        "synthetic_identity"
+      ]
+    },
+    {
+      "source": "kyc_synthetic_identity_docs",
+      "target": "ai_forged_dispute_evidence",
+      "shared_techniques": [
+        "identity_document_forgery"
+      ]
+    },
+    {
+      "source": "kyc_deepfake_video_liveness",
+      "target": "biometric_payment_spoofing",
+      "shared_techniques": [
+        "identity_spoofing"
       ]
     },
     {
@@ -653,6 +1137,21 @@
     },
     {
       "source": "kyc_deepfake_video_liveness",
+      "target": "deepfake_reverification_takeover",
+      "shared_techniques": [
+        "identity_spoofing",
+        "deepfake_video"
+      ]
+    },
+    {
+      "source": "kyc_deepfake_video_liveness",
+      "target": "vendor_payment_redirection_bec",
+      "shared_techniques": [
+        "identity_spoofing"
+      ]
+    },
+    {
+      "source": "kyc_deepfake_video_liveness",
       "target": "app_deepfake_executive_vishing",
       "shared_techniques": [
         "deepfake_video"
@@ -660,9 +1159,37 @@
     },
     {
       "source": "kyc_fraudulent_merchant_onboarding",
+      "target": "bnpl_bust_out_fraud",
+      "shared_techniques": [
+        "synthetic_identity"
+      ]
+    },
+    {
+      "source": "kyc_fraudulent_merchant_onboarding",
       "target": "mule_synthetic_network_generation",
       "shared_techniques": [
         "synthetic_identity"
+      ]
+    },
+    {
+      "source": "kyc_fraudulent_merchant_onboarding",
+      "target": "synthetic_referral_reward_fraud",
+      "shared_techniques": [
+        "synthetic_identity"
+      ]
+    },
+    {
+      "source": "kyc_fraudulent_merchant_onboarding",
+      "target": "ai_forged_dispute_evidence",
+      "shared_techniques": [
+        "identity_document_forgery"
+      ]
+    },
+    {
+      "source": "agentic_prompt_injection_checkout",
+      "target": "agentic_return_fraud",
+      "shared_techniques": [
+        "prompt_injection"
       ]
     },
     {
@@ -695,6 +1222,27 @@
       ]
     },
     {
+      "source": "agentic_prompt_injection_checkout",
+      "target": "biometric_payment_spoofing",
+      "shared_techniques": [
+        "adversarial_ml"
+      ]
+    },
+    {
+      "source": "agentic_prompt_injection_checkout",
+      "target": "risk_engine_shaping_3ds_evasion",
+      "shared_techniques": [
+        "adversarial_ml"
+      ]
+    },
+    {
+      "source": "agentic_vendor_agent_manipulation",
+      "target": "agentic_return_fraud",
+      "shared_techniques": [
+        "prompt_injection"
+      ]
+    },
+    {
       "source": "agentic_vendor_agent_manipulation",
       "target": "adv_feature_evasion",
       "shared_techniques": [
@@ -713,6 +1261,27 @@
       "target": "adv_model_extraction_probing",
       "shared_techniques": [
         "adversarial_ml"
+      ]
+    },
+    {
+      "source": "agentic_vendor_agent_manipulation",
+      "target": "biometric_payment_spoofing",
+      "shared_techniques": [
+        "adversarial_ml"
+      ]
+    },
+    {
+      "source": "agentic_vendor_agent_manipulation",
+      "target": "risk_engine_shaping_3ds_evasion",
+      "shared_techniques": [
+        "adversarial_ml"
+      ]
+    },
+    {
+      "source": "app_deepfake_executive_vishing",
+      "target": "agentic_return_fraud",
+      "shared_techniques": [
+        "llm_social_engineering"
       ]
     },
     {
@@ -752,6 +1321,48 @@
       ]
     },
     {
+      "source": "app_deepfake_executive_vishing",
+      "target": "instant_rail_finality_exploit",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "app_deepfake_executive_vishing",
+      "target": "mule_job_scam_recruitment",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "app_deepfake_executive_vishing",
+      "target": "romance_scam_mule_recruitment",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "app_deepfake_executive_vishing",
+      "target": "vendor_payment_redirection_bec",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "app_deepfake_executive_vishing",
+      "target": "deepfake_reverification_takeover",
+      "shared_techniques": [
+        "deepfake_video"
+      ]
+    },
+    {
+      "source": "app_voice_clone_p2p_scam",
+      "target": "agentic_return_fraud",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
       "source": "app_voice_clone_p2p_scam",
       "target": "app_hyperpersonalized_phishing",
       "shared_techniques": [
@@ -780,8 +1391,43 @@
       ]
     },
     {
+      "source": "app_voice_clone_p2p_scam",
+      "target": "instant_rail_finality_exploit",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "app_voice_clone_p2p_scam",
+      "target": "mule_job_scam_recruitment",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "app_voice_clone_p2p_scam",
+      "target": "romance_scam_mule_recruitment",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "app_voice_clone_p2p_scam",
+      "target": "vendor_payment_redirection_bec",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
       "source": "app_hyperpersonalized_phishing",
       "target": "adv_model_extraction_probing",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "app_hyperpersonalized_phishing",
+      "target": "ai_forged_dispute_evidence",
       "shared_techniques": [
         "automation_at_scale"
       ]
@@ -796,9 +1442,61 @@
     },
     {
       "source": "app_hyperpersonalized_phishing",
+      "target": "bnpl_bust_out_fraud",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "app_hyperpersonalized_phishing",
+      "target": "corridor_arbitrage_laundering",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "app_hyperpersonalized_phishing",
+      "target": "instant_rail_finality_exploit",
+      "shared_techniques": [
+        "automation_at_scale",
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "app_hyperpersonalized_phishing",
       "target": "mule_adaptive_layering_vs_aml",
       "shared_techniques": [
         "automation_at_scale"
+      ]
+    },
+    {
+      "source": "app_hyperpersonalized_phishing",
+      "target": "mule_job_scam_recruitment",
+      "shared_techniques": [
+        "automation_at_scale",
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "app_hyperpersonalized_phishing",
+      "target": "romance_scam_mule_recruitment",
+      "shared_techniques": [
+        "automation_at_scale",
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "app_hyperpersonalized_phishing",
+      "target": "synthetic_referral_reward_fraud",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "app_hyperpersonalized_phishing",
+      "target": "agentic_return_fraud",
+      "shared_techniques": [
+        "llm_social_engineering"
       ]
     },
     {
@@ -811,6 +1509,13 @@
     {
       "source": "app_hyperpersonalized_phishing",
       "target": "cross_fake_support_chatbot",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "app_hyperpersonalized_phishing",
+      "target": "vendor_payment_redirection_bec",
       "shared_techniques": [
         "llm_social_engineering"
       ]
@@ -824,9 +1529,68 @@
     },
     {
       "source": "app_romance_investment_bot",
+      "target": "ai_forged_dispute_evidence",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "app_romance_investment_bot",
+      "target": "bnpl_bust_out_fraud",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "app_romance_investment_bot",
+      "target": "corridor_arbitrage_laundering",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "app_romance_investment_bot",
+      "target": "instant_rail_finality_exploit",
+      "shared_techniques": [
+        "automation_at_scale",
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "app_romance_investment_bot",
       "target": "mule_adaptive_layering_vs_aml",
       "shared_techniques": [
         "automation_at_scale"
+      ]
+    },
+    {
+      "source": "app_romance_investment_bot",
+      "target": "mule_job_scam_recruitment",
+      "shared_techniques": [
+        "automation_at_scale",
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "app_romance_investment_bot",
+      "target": "romance_scam_mule_recruitment",
+      "shared_techniques": [
+        "automation_at_scale",
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "app_romance_investment_bot",
+      "target": "synthetic_referral_reward_fraud",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "app_romance_investment_bot",
+      "target": "agentic_return_fraud",
+      "shared_techniques": [
+        "llm_social_engineering"
       ]
     },
     {
@@ -839,6 +1603,13 @@
     {
       "source": "app_romance_investment_bot",
       "target": "cross_fake_support_chatbot",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "app_romance_investment_bot",
+      "target": "vendor_payment_redirection_bec",
       "shared_techniques": [
         "llm_social_engineering"
       ]
@@ -859,14 +1630,92 @@
     },
     {
       "source": "mule_synthetic_network_generation",
+      "target": "corridor_arbitrage_laundering",
+      "shared_techniques": [
+        "adversarial_evasion"
+      ]
+    },
+    {
+      "source": "mule_synthetic_network_generation",
       "target": "mule_adaptive_layering_vs_aml",
       "shared_techniques": [
         "adversarial_evasion"
       ]
     },
     {
+      "source": "mule_synthetic_network_generation",
+      "target": "risk_engine_shaping_3ds_evasion",
+      "shared_techniques": [
+        "adversarial_evasion"
+      ]
+    },
+    {
+      "source": "mule_synthetic_network_generation",
+      "target": "bnpl_bust_out_fraud",
+      "shared_techniques": [
+        "synthetic_identity"
+      ]
+    },
+    {
+      "source": "mule_synthetic_network_generation",
+      "target": "synthetic_referral_reward_fraud",
+      "shared_techniques": [
+        "synthetic_identity"
+      ]
+    },
+    {
       "source": "mule_adaptive_layering_vs_aml",
       "target": "adv_model_extraction_probing",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "mule_adaptive_layering_vs_aml",
+      "target": "ai_forged_dispute_evidence",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "mule_adaptive_layering_vs_aml",
+      "target": "bnpl_bust_out_fraud",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "mule_adaptive_layering_vs_aml",
+      "target": "corridor_arbitrage_laundering",
+      "shared_techniques": [
+        "automation_at_scale",
+        "adversarial_evasion"
+      ]
+    },
+    {
+      "source": "mule_adaptive_layering_vs_aml",
+      "target": "instant_rail_finality_exploit",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "mule_adaptive_layering_vs_aml",
+      "target": "mule_job_scam_recruitment",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "mule_adaptive_layering_vs_aml",
+      "target": "romance_scam_mule_recruitment",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "mule_adaptive_layering_vs_aml",
+      "target": "synthetic_referral_reward_fraud",
       "shared_techniques": [
         "automation_at_scale"
       ]
@@ -881,6 +1730,13 @@
     {
       "source": "mule_adaptive_layering_vs_aml",
       "target": "adv_feedback_loop_poisoning",
+      "shared_techniques": [
+        "adversarial_evasion"
+      ]
+    },
+    {
+      "source": "mule_adaptive_layering_vs_aml",
+      "target": "risk_engine_shaping_3ds_evasion",
       "shared_techniques": [
         "adversarial_evasion"
       ]
@@ -895,9 +1751,80 @@
     },
     {
       "source": "adv_feature_evasion",
+      "target": "corridor_arbitrage_laundering",
+      "shared_techniques": [
+        "adversarial_evasion"
+      ]
+    },
+    {
+      "source": "adv_feature_evasion",
+      "target": "risk_engine_shaping_3ds_evasion",
+      "shared_techniques": [
+        "adversarial_evasion",
+        "adversarial_ml"
+      ]
+    },
+    {
+      "source": "adv_feature_evasion",
       "target": "adv_model_extraction_probing",
       "shared_techniques": [
         "adversarial_ml"
+      ]
+    },
+    {
+      "source": "adv_feature_evasion",
+      "target": "biometric_payment_spoofing",
+      "shared_techniques": [
+        "adversarial_ml"
+      ]
+    },
+    {
+      "source": "adv_model_extraction_probing",
+      "target": "ai_forged_dispute_evidence",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "adv_model_extraction_probing",
+      "target": "bnpl_bust_out_fraud",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "adv_model_extraction_probing",
+      "target": "corridor_arbitrage_laundering",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "adv_model_extraction_probing",
+      "target": "instant_rail_finality_exploit",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "adv_model_extraction_probing",
+      "target": "mule_job_scam_recruitment",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "adv_model_extraction_probing",
+      "target": "romance_scam_mule_recruitment",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "adv_model_extraction_probing",
+      "target": "synthetic_referral_reward_fraud",
+      "shared_techniques": [
+        "automation_at_scale"
       ]
     },
     {
@@ -908,11 +1835,382 @@
       ]
     },
     {
+      "source": "adv_model_extraction_probing",
+      "target": "biometric_payment_spoofing",
+      "shared_techniques": [
+        "adversarial_ml"
+      ]
+    },
+    {
+      "source": "adv_model_extraction_probing",
+      "target": "risk_engine_shaping_3ds_evasion",
+      "shared_techniques": [
+        "adversarial_ml"
+      ]
+    },
+    {
+      "source": "adv_feedback_loop_poisoning",
+      "target": "corridor_arbitrage_laundering",
+      "shared_techniques": [
+        "adversarial_evasion"
+      ]
+    },
+    {
+      "source": "adv_feedback_loop_poisoning",
+      "target": "risk_engine_shaping_3ds_evasion",
+      "shared_techniques": [
+        "adversarial_evasion",
+        "adversarial_ml"
+      ]
+    },
+    {
+      "source": "adv_feedback_loop_poisoning",
+      "target": "biometric_payment_spoofing",
+      "shared_techniques": [
+        "adversarial_ml"
+      ]
+    },
+    {
+      "source": "cross_fake_support_chatbot",
+      "target": "agentic_return_fraud",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
       "source": "cross_fake_support_chatbot",
       "target": "cross_fake_cashback_bot",
       "shared_techniques": [
         "llm_social_engineering",
         "identity_spoofing"
+      ]
+    },
+    {
+      "source": "cross_fake_support_chatbot",
+      "target": "instant_rail_finality_exploit",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "cross_fake_support_chatbot",
+      "target": "mule_job_scam_recruitment",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "cross_fake_support_chatbot",
+      "target": "romance_scam_mule_recruitment",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "cross_fake_support_chatbot",
+      "target": "vendor_payment_redirection_bec",
+      "shared_techniques": [
+        "llm_social_engineering",
+        "identity_spoofing"
+      ]
+    },
+    {
+      "source": "cross_fake_support_chatbot",
+      "target": "biometric_payment_spoofing",
+      "shared_techniques": [
+        "identity_spoofing"
+      ]
+    },
+    {
+      "source": "cross_fake_support_chatbot",
+      "target": "deepfake_reverification_takeover",
+      "shared_techniques": [
+        "identity_spoofing"
+      ]
+    },
+    {
+      "source": "cross_fake_cashback_bot",
+      "target": "agentic_return_fraud",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "cross_fake_cashback_bot",
+      "target": "instant_rail_finality_exploit",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "cross_fake_cashback_bot",
+      "target": "mule_job_scam_recruitment",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "cross_fake_cashback_bot",
+      "target": "romance_scam_mule_recruitment",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "cross_fake_cashback_bot",
+      "target": "vendor_payment_redirection_bec",
+      "shared_techniques": [
+        "llm_social_engineering",
+        "identity_spoofing"
+      ]
+    },
+    {
+      "source": "cross_fake_cashback_bot",
+      "target": "biometric_payment_spoofing",
+      "shared_techniques": [
+        "identity_spoofing"
+      ]
+    },
+    {
+      "source": "cross_fake_cashback_bot",
+      "target": "deepfake_reverification_takeover",
+      "shared_techniques": [
+        "identity_spoofing"
+      ]
+    },
+    {
+      "source": "bnpl_bust_out_fraud",
+      "target": "ai_forged_dispute_evidence",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "bnpl_bust_out_fraud",
+      "target": "corridor_arbitrage_laundering",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "bnpl_bust_out_fraud",
+      "target": "instant_rail_finality_exploit",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "bnpl_bust_out_fraud",
+      "target": "mule_job_scam_recruitment",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "bnpl_bust_out_fraud",
+      "target": "romance_scam_mule_recruitment",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "bnpl_bust_out_fraud",
+      "target": "synthetic_referral_reward_fraud",
+      "shared_techniques": [
+        "automation_at_scale",
+        "synthetic_identity"
+      ]
+    },
+    {
+      "source": "instant_rail_finality_exploit",
+      "target": "ai_forged_dispute_evidence",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "instant_rail_finality_exploit",
+      "target": "corridor_arbitrage_laundering",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "instant_rail_finality_exploit",
+      "target": "mule_job_scam_recruitment",
+      "shared_techniques": [
+        "automation_at_scale",
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "instant_rail_finality_exploit",
+      "target": "romance_scam_mule_recruitment",
+      "shared_techniques": [
+        "automation_at_scale",
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "instant_rail_finality_exploit",
+      "target": "synthetic_referral_reward_fraud",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "instant_rail_finality_exploit",
+      "target": "agentic_return_fraud",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "instant_rail_finality_exploit",
+      "target": "vendor_payment_redirection_bec",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "biometric_payment_spoofing",
+      "target": "deepfake_reverification_takeover",
+      "shared_techniques": [
+        "identity_spoofing"
+      ]
+    },
+    {
+      "source": "biometric_payment_spoofing",
+      "target": "vendor_payment_redirection_bec",
+      "shared_techniques": [
+        "identity_spoofing"
+      ]
+    },
+    {
+      "source": "biometric_payment_spoofing",
+      "target": "risk_engine_shaping_3ds_evasion",
+      "shared_techniques": [
+        "adversarial_ml"
+      ]
+    },
+    {
+      "source": "ai_forged_dispute_evidence",
+      "target": "corridor_arbitrage_laundering",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "ai_forged_dispute_evidence",
+      "target": "mule_job_scam_recruitment",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "ai_forged_dispute_evidence",
+      "target": "romance_scam_mule_recruitment",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "ai_forged_dispute_evidence",
+      "target": "synthetic_referral_reward_fraud",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "corridor_arbitrage_laundering",
+      "target": "mule_job_scam_recruitment",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "corridor_arbitrage_laundering",
+      "target": "romance_scam_mule_recruitment",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "corridor_arbitrage_laundering",
+      "target": "synthetic_referral_reward_fraud",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "corridor_arbitrage_laundering",
+      "target": "risk_engine_shaping_3ds_evasion",
+      "shared_techniques": [
+        "adversarial_evasion"
+      ]
+    },
+    {
+      "source": "synthetic_referral_reward_fraud",
+      "target": "mule_job_scam_recruitment",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "synthetic_referral_reward_fraud",
+      "target": "romance_scam_mule_recruitment",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "vendor_payment_redirection_bec",
+      "target": "agentic_return_fraud",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "vendor_payment_redirection_bec",
+      "target": "mule_job_scam_recruitment",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "vendor_payment_redirection_bec",
+      "target": "romance_scam_mule_recruitment",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "vendor_payment_redirection_bec",
+      "target": "deepfake_reverification_takeover",
+      "shared_techniques": [
+        "identity_spoofing"
+      ]
+    },
+    {
+      "source": "romance_scam_mule_recruitment",
+      "target": "mule_job_scam_recruitment",
+      "shared_techniques": [
+        "automation_at_scale",
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "romance_scam_mule_recruitment",
+      "target": "agentic_return_fraud",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "agentic_return_fraud",
+      "target": "mule_job_scam_recruitment",
+      "shared_techniques": [
+        "llm_social_engineering"
       ]
     }
   ],

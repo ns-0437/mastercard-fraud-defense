@@ -390,6 +390,245 @@ ATTACK_TAXONOMY = [
         "severity": "medium",
         "likelihood": "medium",
     },
+
+    # --- Added in a second identification pass (Aug 26) to push diversity beyond the
+    # first 21 -- each of these introduces either a genuinely distinct mechanism from
+    # everything above, or a new channel entirely (lending-bnpl, card-present,
+    # b2b-payments, rewards-fraud), rather than rephrasing an existing node. ---
+    {
+        "id": "bnpl_bust_out_fraud",
+        "name": "Synthetic-identity 'bust-out' fraud against BNPL lenders",
+        "channel": "lending-bnpl",
+        "mechanism": "GenAI-generated synthetic identities (see kyc_synthetic_identity_docs) "
+                      "are specifically tuned to pass buy-now-pay-later underwriting, which "
+                      "is deliberately lighter-touch than credit card issuance. Many small "
+                      "BNPL credit lines are opened across many merchants/providers using the "
+                      "same synthetic identity, drawn down close to simultaneously, then "
+                      "defaulted on all at once before any single lender's fraud model "
+                      "connects the pattern across providers.",
+        "grounding": "Bust-out fraud against thin-file/light-underwriting lenders is a "
+                      "well-documented credit fraud pattern; BNPL's minimal-friction "
+                      "approval flow (designed for checkout conversion, not fraud "
+                      "resistance) is a newer, explicitly softer target than traditional "
+                      "credit issuance, and GenAI removes the manual effort of maintaining "
+                      "a consistent synthetic profile across many simultaneous applications.",
+        "techniques": ["synthetic_identity", "automation_at_scale"],
+        "severity": "high",
+        "likelihood": "medium",
+    },
+    {
+        "id": "instant_rail_finality_exploit",
+        "name": "Social engineering timed to exploit instant-payment-rail irrevocability",
+        "channel": "authorized-push-payment",
+        "mechanism": "An LLM-driven scam script is timed and structured specifically around "
+                      "real-time payment rails (FedNow, UK Faster Payments, UPI, PIX) where "
+                      "funds settle irrevocably in seconds — the pretext is engineered to "
+                      "create urgency precisely because the victim (and the bank) have no "
+                      "post-transaction reversal window to catch the fraud after the fact, "
+                      "unlike card rails with chargeback recourse.",
+        "grounding": "Regulators including the UK's Payment Systems Regulator and India's "
+                      "RBI have specifically flagged authorized-push-payment fraud growth as "
+                      "tied to real-time rail adoption, precisely because instant finality "
+                      "removes the reversal window that limits card-fraud losses; this is "
+                      "the payment-rail-level mechanism underlying several APP scams above, "
+                      "made explicit as its own vector because the finality property itself "
+                      "is what's being targeted, not just the social engineering pretext.",
+        "techniques": ["llm_social_engineering", "automation_at_scale"],
+        "severity": "high",
+        "likelihood": "high",
+    },
+    {
+        "id": "biometric_payment_spoofing",
+        "name": "AI-generated spoof against point-of-sale biometric payment authorization",
+        "channel": "card-present",
+        "mechanism": "Generative models produce a synthetic face, palm-vein, or fingerprint "
+                      "pattern designed to fool an in-person biometric payment terminal "
+                      "(e.g. palm-pay or face-pay checkout systems), distinct from onboarding-"
+                      "time liveness bypass — this targets the AUTHORIZATION step of an "
+                      "in-person transaction on an already-enrolled biometric credential, "
+                      "using presentation-attack techniques informed by generative modeling "
+                      "of the sensor's expected input.",
+        "grounding": "Biometric point-of-sale payment (palm/face pay) is being actively "
+                      "deployed at retail; presentation attacks against biometric sensors "
+                      "(spoof fingerprints, photos/masks fooling face sensors) are a "
+                      "long-documented security research area now gaining a direct financial "
+                      "payment-authorization target as these terminals roll out.",
+        "techniques": ["identity_spoofing", "adversarial_ml"],
+        "severity": "medium",
+        "likelihood": "low",
+    },
+    {
+        "id": "ai_forged_dispute_evidence",
+        "name": "AI-forged supporting evidence for fraudulent chargeback disputes",
+        "channel": "card-not-present",
+        "mechanism": "Beyond varying dispute narrative TEXT (see cnp_llm_dispute_narratives), "
+                      "an image-generation model forges the supporting EVIDENCE a chargeback "
+                      "review actually checks — fake 'item arrived damaged' photos, forged "
+                      "delivery/tracking screenshots, doctored return-shipment receipts — "
+                      "each generated fresh per dispute so no two submissions share a "
+                      "detectable duplicate image.",
+        "grounding": "Chargeback/friendly-fraud reviews often weight photographic and "
+                      "documentary evidence heavily precisely because it was hard to forge "
+                      "convincingly at scale; modern image generation removes that cost, "
+                      "directly undermining a control merchants and issuers currently rely on.",
+        "techniques": ["automation_at_scale", "identity_document_forgery"],
+        "severity": "medium",
+        "likelihood": "medium",
+    },
+    {
+        "id": "corridor_arbitrage_laundering",
+        "name": "AI-optimized cross-border corridor selection for layering",
+        "channel": "mule-network",
+        "mechanism": "An LLM continuously ingests scraped regulatory enforcement actions, "
+                      "AML program news, and provider policy changes across many countries "
+                      "and remittance providers, then recommends which corridor/provider "
+                      "combination currently has the weakest effective controls for routing "
+                      "the next layering hop — re-optimizing as corridors get tightened, "
+                      "instead of a launderer relying on static, out-of-date expert knowledge.",
+        "grounding": "Regulatory arbitrage across weaker-AML jurisdictions and providers is "
+                      "a known real-world laundering strategy; what previously required an "
+                      "experienced human launderer's up-to-date knowledge of the regulatory "
+                      "landscape is now a continuously-refreshed automated research task.",
+        "techniques": ["adversarial_evasion", "automation_at_scale"],
+        "severity": "high",
+        "likelihood": "low",
+    },
+    {
+        "id": "synthetic_referral_reward_fraud",
+        "name": "Synthetic-identity farming against referral/cashback reward programs",
+        "channel": "rewards-fraud",
+        "mechanism": "GenAI mass-produces synthetic identities and device fingerprints "
+                      "specifically to farm real cash payouts from fintech referral bonuses, "
+                      "sign-up incentives, and cashback programs — each synthetic 'user' "
+                      "completes just enough qualifying activity to trigger a payout before "
+                      "being abandoned, at a volume no human fraud ring could sustain "
+                      "manually.",
+        "grounding": "Promotion/referral abuse is an established, budgeted fraud-loss "
+                      "category at consumer fintech apps specifically because these programs "
+                      "pay out real money for low-friction actions; GenAI's cost advantage is "
+                      "in identity/device diversity at a volume that defeats simple duplicate-"
+                      "detection heuristics.",
+        "techniques": ["synthetic_identity", "automation_at_scale"],
+        "severity": "medium",
+        "likelihood": "high",
+    },
+    {
+        "id": "vendor_payment_redirection_bec",
+        "name": "LLM-drafted vendor payment redirection (business email compromise)",
+        "channel": "b2b-payments",
+        "mechanism": "An LLM drafts a contextually precise email impersonating an existing, "
+                      "legitimate vendor, requesting that a company's accounts-payable team "
+                      "update the vendor's bank details on file ahead of a real, already-"
+                      "expected invoice payment — distinct from urgent-wire CEO-fraud "
+                      "vishing, this targets vendor MASTER DATA so that a subsequent, "
+                      "entirely routine invoice payment silently goes to the attacker's "
+                      "account with no urgency cues to raise suspicion.",
+        "grounding": "Vendor email compromise / payment redirection is one of the largest "
+                      "reported categories of business email compromise loss (FBI IC3 "
+                      "consistently ranks BEC among the highest-dollar-loss cybercrime "
+                      "categories); LLM drafting removes the language/context mistakes that "
+                      "currently help AP teams catch a fraction of these attempts.",
+        "techniques": ["llm_social_engineering", "identity_spoofing"],
+        "severity": "high",
+        "likelihood": "high",
+    },
+    {
+        "id": "risk_engine_shaping_3ds_evasion",
+        "name": "Adversarial transaction shaping to avoid 3-D Secure step-up challenges",
+        "channel": "ml-defense-attack",
+        "mechanism": "An attacker probes an issuer's 3DS2 risk-based authentication (which "
+                      "decides whether a transaction is routed 'frictionless,' i.e. no "
+                      "challenge, or gets a step-up challenge) and uses an LLM-assisted "
+                      "search over transaction attributes (amount, merchant category, "
+                      "device/browser fingerprint signals) to find combinations that "
+                      "reliably score as low-risk enough to skip the challenge entirely, "
+                      "then shapes fraudulent transactions to match.",
+        "grounding": "3DS2's frictionless flow is explicitly designed around issuer risk "
+                      "scoring to reduce checkout friction for low-risk transactions; "
+                      "adversarial shaping of transaction attributes to stay under a known "
+                      "or inferred risk threshold is a direct extension of the adversarial-"
+                      "evasion research already covered by adv_feature_evasion, applied "
+                      "specifically to the 3DS step-up decision rather than a generic fraud "
+                      "score.",
+        "techniques": ["adversarial_ml", "adversarial_evasion"],
+        "severity": "medium",
+        "likelihood": "low",
+    },
+    {
+        "id": "romance_scam_mule_recruitment",
+        "name": "Romance-scam chatbot recruiting the victim as an unwitting money mule",
+        "channel": "mule-network",
+        "mechanism": "Rather than asking the romance-scam victim (see app_romance_investment_bot) "
+                      "for money directly, the LLM instead persuades them to receive funds "
+                      "into their OWN real bank account on the scammer's behalf ('help my "
+                      "business partner') and forward them onward — using the victim's real, "
+                      "unflagged account as a mule hop, which is structurally different from "
+                      "and harder to detect than a synthetic mule account with no transaction "
+                      "history.",
+        "grounding": "Recruiting real, otherwise-legitimate people as unwitting money mules "
+                      "through romance/relationship manipulation is a specifically named, "
+                      "heavily reported pattern in FBI IC3 and UK Action Fraud data, distinct "
+                      "from synthetic-identity mule networks precisely because the account "
+                      "itself has genuine history and passes ordinary KYC.",
+        "techniques": ["llm_social_engineering", "automation_at_scale"],
+        "severity": "high",
+        "likelihood": "high",
+    },
+    {
+        "id": "deepfake_reverification_takeover",
+        "name": "Deepfake of an existing customer to pass step-up re-verification",
+        "channel": "account-takeover",
+        "mechanism": "Distinct from onboarding a brand-new synthetic identity, this targets "
+                      "an EXISTING real customer's account: when a bank triggers step-up video "
+                      "re-verification for a high-risk action (large withdrawal, beneficiary "
+                      "change, contact-detail update), the attacker presents a deepfake built "
+                      "from the real customer's public photos/videos to pass that specific "
+                      "challenge and push the change through.",
+        "grounding": "Video re-verification as a step-up control for high-risk account "
+                      "changes is increasingly common at digital banks; it assumes liveness "
+                      "checks are hard to fool with a real (not synthetic) target's likeness, "
+                      "an assumption deepfake generation quality has been eroding.",
+        "techniques": ["deepfake_video", "identity_spoofing"],
+        "severity": "high",
+        "likelihood": "medium",
+    },
+    {
+        "id": "agentic_return_fraud",
+        "name": "Prompt-manipulated AI shopping agent approving fraudulent returns",
+        "channel": "agentic-commerce",
+        "mechanism": "An AI customer-service agent with authority to approve refunds/returns "
+                      "is fed fabricated conversational claims (item never arrived, wrong item "
+                      "shipped) crafted to exploit the agent's tendency to trust user-supplied "
+                      "context more readily than a trained human rep would apply skepticism, "
+                      "at a volume automated across many orders/accounts.",
+        "grounding": "Return fraud and 'wardrobing' already cost retailers billions annually "
+                      "with human-staffed support lines providing some resistance; handing "
+                      "refund-approval authority to an AI agent without equivalent skepticism "
+                      "calibration is a predictable new attack surface as retailers adopt "
+                      "agentic customer service.",
+        "techniques": ["prompt_injection", "llm_social_engineering"],
+        "severity": "medium",
+        "likelihood": "medium",
+    },
+    {
+        "id": "mule_job_scam_recruitment",
+        "name": "GenAI-generated fake job postings recruiting money mules",
+        "channel": "mule-network",
+        "mechanism": "LLMs mass-generate fake 'payment processing agent' or 'remote finance "
+                      "assistant' job postings, each with locally-tailored fake company "
+                      "branding and job-board-appropriate phrasing, posted at scale across "
+                      "many job boards and social platforms to recruit real people (knowingly "
+                      "or not) into opening or operating bank accounts as mules for a "
+                      "advertised 'salary' or 'commission.'",
+        "grounding": "Money-mule recruitment via fake job postings is a specifically named, "
+                      "actively warned-about pattern (UK NCA, Europol both run public "
+                      "awareness campaigns against exactly this vector); GenAI's contribution "
+                      "is generating many distinct, locally-plausible fake postings/company "
+                      "fronts instead of one reused template that's easy to pattern-match.",
+        "techniques": ["llm_social_engineering", "automation_at_scale"],
+        "severity": "medium",
+        "likelihood": "high",
+    },
 ]
 
 TECHNIQUE_DESCRIPTIONS = {
