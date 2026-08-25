@@ -11,8 +11,11 @@ for the build plan, [SKILL.md](SKILL.md) for how to run each piece.
 
 ## Status
 Phases 0-7 built, gate-checked, and deployed (see docs/PHASES.md for the full record,
-including results kept in the log rather than deleted once superseded, and the Phase 7
-adversarial self-test finding that 4 of 5 hand-crafted evasion attempts succeeded).
+including results kept in the log rather than deleted once superseded). The Phase 7
+adversarial self-test went through several wrong readings due to a graph/model-context
+mismatch bug in the test script itself; with that fixed and training data genuinely
+widened, all 5 of 5 hand-crafted evasion attempts are now caught — see docs/PHASES.md
+for the full correction writeup, not just the final number.
 Remaining: Phase 8 (submission).
 
 **Live demo**: https://aidefenselab-frontend-gwezm4pj4a-uc.a.run.app
