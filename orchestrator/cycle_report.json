@@ -1,41 +1,44 @@
 {
   "step_a_cycle1_model_vs_v2_attacks": {
     "overall": {
-      "n": 2645,
-      "n_positive": 2645,
+      "n": 4003,
+      "n_positive": 4003,
       "precision": 1.0,
-      "recall": 0.996219281663516,
-      "f1": 0.9981060606060606,
+      "recall": 0.9962528103922058,
+      "f1": 0.9981228882492804,
       "pr_auc": null,
       "fp": 0,
       "tn": 0,
       "false_positive_rate": null
     },
     "by_family": {
-      "ato_rapid_drain_v2": 0.9989949748743718,
-      "card_testing_burst_v2": 1.0,
-      "mule_network_layering_v2": 0.964,
+      "ato_lowandslow_exfiltration_v2": 1.0,
+      "ato_rapid_drain_v2": 1.0,
+      "card_testing_burst_v2": 0.985,
+      "mule_network_layering_v2": 0.9807692307692307,
       "structuring_smurfing_v2": 1.0
     }
   },
   "step_b_cycle2_model": {
     "overall": {
-      "n": 62827,
-      "n_positive": 2336,
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1": 1.0,
-      "pr_auc": 1.0,
-      "fp": 0,
-      "tn": 60491,
-      "false_positive_rate": 0.0
+      "n": 64011,
+      "n_positive": 4419,
+      "precision": 0.9603765323992994,
+      "recall": 0.9927585426567097,
+      "f1": 0.9762990986981195,
+      "pr_auc": 0.9984847502111782,
+      "fp": 181,
+      "tn": 59411,
+      "false_positive_rate": 0.003037320445697409
     },
     "by_family": {
+      "ato_lowandslow_exfiltration": 0.985929648241206,
+      "ato_lowandslow_exfiltration_v2": 0.9848771266540642,
       "ato_rapid_drain": 1.0,
       "ato_rapid_drain_v2": 1.0,
       "card_testing_burst": 1.0,
       "card_testing_burst_v2": 1.0,
-      "mule_network_layering": 1.0,
+      "mule_network_layering": 0.9701492537313433,
       "mule_network_layering_v2": 1.0,
       "structuring_smurfing": 1.0,
       "structuring_smurfing_v2": 1.0
@@ -43,15 +46,17 @@
   },
   "regression_check": {
     "cycle1_v1_recall": {
-      "ato_rapid_drain": 0.9893048128342246,
+      "ato_lowandslow_exfiltration": 1.0,
+      "ato_rapid_drain": 0.9949874686716792,
       "card_testing_burst": 1.0,
-      "mule_network_layering": 0.9777777777777777,
+      "mule_network_layering": 0.9850746268656716,
       "structuring_smurfing": 1.0
     },
     "cycle2_v1_recall": {
+      "ato_lowandslow_exfiltration": 0.985929648241206,
       "ato_rapid_drain": 1.0,
       "card_testing_burst": 1.0,
-      "mule_network_layering": 1.0,
+      "mule_network_layering": 0.9701492537313433,
       "structuring_smurfing": 1.0
     },
     "regressed_families": [],

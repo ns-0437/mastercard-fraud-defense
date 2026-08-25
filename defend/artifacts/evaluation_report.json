@@ -1,26 +1,27 @@
 {
   "primary": {
-    "precision": 0.9571275455519829,
-    "recall": 0.9933259176863182,
-    "f1": 0.9748908296943232,
-    "pr_auc": 0.9957453225420585,
-    "roc_auc": 0.9999439758385498,
-    "false_positive_rate_on_legit": 0.0006487293014807246,
+    "precision": 0.9841413683733575,
+    "recall": 0.9977032613688562,
+    "f1": 0.9908759124087592,
+    "pr_auc": 0.9993700068526892,
+    "roc_auc": 0.9999777822030071,
+    "false_positive_rate_on_legit": 0.0005792592102214425,
     "confusion_matrix": {
-      "tn": 61619,
-      "fp": 40,
-      "fn": 6,
-      "tp": 893
+      "tn": 60387,
+      "fp": 35,
+      "fn": 5,
+      "tp": 2172
     },
-    "test_set_size": 62558,
-    "test_set_positives": 899
+    "test_set_size": 62599,
+    "test_set_positives": 2177
   },
   "per_family_recall": {
-    "ato_rapid_drain": 0.9920424403183024,
+    "ato_rapid_drain": 0.9975845410628019,
     "structuring_smurfing": 1.0,
-    "mule_network_layering": 0.9777777777777777,
-    "card_testing_burst": 1.0
+    "mule_network_layering": 0.9850746268656716,
+    "card_testing_burst": 1.0,
+    "ato_lowandslow_exfiltration": 0.997093023255814
   },
-  "secondary_native_fraud_recall": 0.00353440150801131,
+  "secondary_native_fraud_recall": 0.003320683111954459,
   "decision_threshold": 0.5
 }
