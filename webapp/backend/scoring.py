@@ -55,12 +55,17 @@ class Scorer:
         dest_node = self._node(txn.get("nameDest", ""))
         known_pair = txn.get("nameOrig") in self.node_lookup and txn.get("nameDest") in self.node_lookup
 
+        # dict.get(key, default) only applies `default` when the key is ABSENT --
+        # Pydantic's TransactionIn always includes optional fields as explicit None
+        # when the client omits them, so `.get()` here was returning None instead of
+        # the intended computed default, then crashing float(None). `or` catches both
+        # "key absent" and "key present but None".
         amount = float(txn["amount"])
-        old_bal_orig = float(txn.get("oldbalanceOrg", 0.0))
-        new_bal_orig = float(txn.get("newbalanceOrig", max(0.0, old_bal_orig - amount)))
-        old_bal_dest = float(txn.get("oldbalanceDest", 0.0))
-        new_bal_dest = float(txn.get("newbalanceDest", old_bal_dest + amount))
-        txn_type = txn.get("type", "PAYMENT")
+        old_bal_orig = float(txn.get("oldbalanceOrg") or 0.0)
+        new_bal_orig = float(txn.get("newbalanceOrig") if txn.get("newbalanceOrig") is not None else max(0.0, old_bal_orig - amount))
+        old_bal_dest = float(txn.get("oldbalanceDest") or 0.0)
+        new_bal_dest = float(txn.get("newbalanceDest") if txn.get("newbalanceDest") is not None else old_bal_dest + amount)
+        txn_type = txn.get("type") or "PAYMENT"
 
         feats = {
             "amount": amount,
