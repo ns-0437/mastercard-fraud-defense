@@ -1,26 +1,26 @@
 {
   "primary": {
-    "precision": 0.9717247879359096,
-    "recall": 0.9923002887391723,
-    "f1": 0.981904761904762,
-    "pr_auc": 0.9952404546201611,
-    "roc_auc": 0.9999351738982423,
-    "false_positive_rate_on_legit": 0.0004865469761105435,
+    "precision": 0.9571275455519829,
+    "recall": 0.9933259176863182,
+    "f1": 0.9748908296943232,
+    "pr_auc": 0.9957453225420585,
+    "roc_auc": 0.9999439758385498,
+    "false_positive_rate_on_legit": 0.0006487293014807246,
     "confusion_matrix": {
-      "tn": 61629,
-      "fp": 30,
-      "fn": 8,
-      "tp": 1031
+      "tn": 61619,
+      "fp": 40,
+      "fn": 6,
+      "tp": 893
     },
-    "test_set_size": 62698,
-    "test_set_positives": 1039
+    "test_set_size": 62558,
+    "test_set_positives": 899
   },
   "per_family_recall": {
-    "ato_rapid_drain": 0.9946949602122016,
+    "ato_rapid_drain": 0.9920424403183024,
     "structuring_smurfing": 1.0,
-    "mule_network_layering": 0.75,
+    "mule_network_layering": 0.9777777777777777,
     "card_testing_burst": 1.0
   },
-  "secondary_native_fraud_recall": 0.0,
+  "secondary_native_fraud_recall": 0.00353440150801131,
   "decision_threshold": 0.5
 }

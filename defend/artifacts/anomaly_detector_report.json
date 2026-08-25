@@ -3,17 +3,17 @@
     "precision": 0.0,
     "recall": 0.0,
     "f1": 0.0,
-    "pr_auc": 0.037736611469825806
+    "pr_auc": 0.03460084220334439
   },
   "overlap_on_true_fraud": {
     "both": 0,
     "only_isolation_forest": 0,
-    "only_xgboost": 1031,
-    "neither": 8
+    "only_xgboost": 893,
+    "neither": 6
   },
   "ensemble_or_rule": {
-    "precision": 0.44806605823554974,
-    "recall": 0.9923002887391723
+    "precision": 0.41095260009203866,
+    "recall": 0.9933259176863182
   },
   "adversarial_case_check": [
     {

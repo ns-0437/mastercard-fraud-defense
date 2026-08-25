@@ -143,7 +143,17 @@ def simulate_structuring(config: AttackConfig, backbone: pd.DataFrame, rng: np.r
 
 
 def simulate_mule_network(config: AttackConfig, backbone: pd.DataFrame, rng: np.random.Generator) -> pd.DataFrame:
-    n_networks = max(1, config.n_instances // config.graph.n_accounts)
+    # Real bug found via repeated small-sample disclosures across multiple runs: with
+    # n_networks = n_instances // n_accounts, an LLM-chosen n_accounts near the upper
+    # end of its bound (up to 30) could divide n_instances down to as few as ~10-40
+    # total mule networks -- e.g. 300 // 8 = 37 networks, ~74 rows, leaving single-digit
+    # test-set rows after the time-based split. That's too thin to trust any recall
+    # number from, and disclosing it as a limitation every run instead of fixing the
+    # actual cause stopped being honest and started being an excuse. MIN_NETWORKS is a
+    # statistical-power floor, not tuning toward a flattering outcome metric -- it
+    # constrains sample size only, same principle as the n_instances floor above.
+    MIN_NETWORKS = 50
+    n_networks = max(MIN_NETWORKS, config.n_instances // config.graph.n_accounts)
     rows = []
     real_pool = _real_account_pool(backbone) if config.warm_up else None
     for net_i in range(n_networks):
