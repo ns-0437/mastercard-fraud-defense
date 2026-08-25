@@ -43,7 +43,7 @@ export default function ClosedLoopResults() {
     <div className="space-y-6 max-w-5xl">
       <Section title="Phase 3 — Cycle-1 detector on PaySim (flagged as an easy-benchmark result — see Phase 4)">
         {primary && (
-          <div className="grid grid-cols-5 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
             <Metric label="Precision" value={primary.precision.toFixed(4)} />
             <Metric label="Recall" value={primary.recall.toFixed(4)} />
             <Metric label="PR-AUC" value={primary.pr_auc.toFixed(4)} />
@@ -51,7 +51,7 @@ export default function ClosedLoopResults() {
             <Metric label="FPR on legit" value={`${(primary.false_positive_rate_on_legit * 100).toFixed(3)}%`} />
           </div>
         )}
-        <div className="grid grid-cols-4 gap-3 mt-3">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3">
           {Object.entries(perFamily).map(([fam, r]) => (
             <Metric key={fam} label={fam} value={r.toFixed(4)} />
           ))}
@@ -60,7 +60,7 @@ export default function ClosedLoopResults() {
 
       <Section title="Independent methodology check — ULB Credit Card Fraud (different real dataset, no graph features possible)">
         {ulb && (
-          <div className="grid grid-cols-5 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
             <Metric label="Precision" value={ulb.precision.toFixed(4)} />
             <Metric label="Recall" value={ulb.recall.toFixed(4)} />
             <Metric label="PR-AUC" value={ulb.pr_auc.toFixed(4)} />
@@ -81,7 +81,7 @@ export default function ClosedLoopResults() {
               <h4 className="text-xs uppercase text-slate-500 mb-2">
                 Step A — cycle-1 model vs. hardened (v2) attacks it never saw
               </h4>
-              <div className="grid grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {Object.entries(loop.step_a_cycle1_model_vs_v2_attacks.by_family).map(([fam, r]) => (
                   <div
                     key={fam}
@@ -120,7 +120,7 @@ export default function ClosedLoopResults() {
               <h4 className="text-xs uppercase text-slate-500 mb-2">
                 Step B — cycle-2 model (retrained on v1+v2) recall by family
               </h4>
-              <div className="grid grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {Object.entries(loop.step_b_cycle2_model.by_family).map(([fam, r]) => (
                   <Metric key={fam} label={fam} value={r.toFixed(4)} />
                 ))}

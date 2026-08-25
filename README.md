@@ -29,6 +29,11 @@ network still can't reach it, that's a network-side DNS policy, not a broken
 deployment — confirmed by reproducing it, testing four other major hosting providers'
 domains on the same network (all resolved fine), and narrowing it to this exact zone.
 
+Both services run with `--min-instances=1` so a judge's first click doesn't land on a
+5-10s Cloud Run cold start with no loading indicator — a small ongoing cost, accepted
+deliberately for a competition demo where a first impression of "this is slow/broken"
+would be a real cost.
+
 **Repo**: https://github.com/ns-0437/mastercard-fraud-defense
 
 ## Quickstart

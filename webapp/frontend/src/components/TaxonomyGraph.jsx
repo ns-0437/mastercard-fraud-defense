@@ -48,8 +48,8 @@ export default function TaxonomyGraph() {
   const active = hovered || selected
 
   return (
-    <div className="flex gap-6">
-      <div className="flex-1 bg-slate-900 rounded-xl border border-slate-800 p-4">
+    <div className="flex flex-col md:flex-row gap-6">
+      <div className="flex-1 min-w-0 bg-slate-900 rounded-xl border border-slate-800 p-4">
         <p className="text-sm text-slate-400 mb-2">
           {data.nodes.length} attack vectors across 8 channels · {data.edges.length} shared-technique links ·
           hover to preview, click for detail, click a channel below to isolate it
@@ -124,7 +124,7 @@ export default function TaxonomyGraph() {
         </div>
       </div>
 
-      <div className="w-96 bg-slate-900 rounded-xl border border-slate-800 p-5">
+      <div className="w-full md:w-96 shrink-0 bg-slate-900 rounded-xl border border-slate-800 p-5">
         {!selectedNode && (
           <p className="text-slate-400 text-sm">Select a node to see its mechanism, real-world grounding, and severity.</p>
         )}

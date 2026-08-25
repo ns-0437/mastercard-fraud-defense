@@ -33,7 +33,7 @@ function FamilyCard({ family, config, fidelity }) {
           <blockquote className="text-sm text-slate-300 italic border-l-2 border-teal-700 pl-3 my-3">
             "{config.reasoning}"
           </blockquote>
-          <div className="grid grid-cols-3 gap-2 text-xs mb-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs mb-3">
             <div className="bg-slate-800/60 rounded px-2 py-1.5">
               <div className="text-slate-500">n_instances</div>
               <div className="text-slate-200">{config.n_instances}</div>
@@ -98,7 +98,7 @@ export default function GenerateFidelity() {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {families.map((family) => (
           <FamilyCard
             key={family}

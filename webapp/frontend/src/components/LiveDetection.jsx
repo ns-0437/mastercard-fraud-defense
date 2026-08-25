@@ -60,7 +60,7 @@ export default function LiveDetection() {
         </div>
 
         {txn && (
-          <div className="grid grid-cols-4 gap-3 mt-4 text-xs">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4 text-xs">
             {Object.entries(txn).map(([k, v]) => (
               <div key={k} className="bg-slate-800/60 rounded px-2 py-1.5">
                 <div className="text-slate-500">{k}</div>
@@ -101,7 +101,7 @@ export default function LiveDetection() {
               <h4 className="text-xs uppercase text-slate-500 mb-2">
                 Top signals the model relies on globally (this transaction's values)
               </h4>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                 {result.top_model_signals.map((sig) => (
                   <div key={sig} className="bg-slate-800/60 rounded px-2 py-1.5 text-xs">
                     <div className="text-slate-500">{sig}</div>

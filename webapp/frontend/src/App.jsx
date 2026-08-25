@@ -25,12 +25,12 @@ export default function App() {
         </p>
       </header>
 
-      <nav className="flex gap-1 px-6 pt-4 border-b border-slate-800">
+      <nav className="flex gap-1 px-6 pt-4 border-b border-slate-800 overflow-x-auto">
         {TABS.map((t) => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className={`px-4 py-2 text-sm rounded-t-lg border-b-2 transition-colors ${
+            className={`px-4 py-2 text-sm rounded-t-lg border-b-2 transition-colors whitespace-nowrap shrink-0 ${
               tab === t.id
                 ? 'border-emerald-400 text-emerald-300 bg-slate-900'
                 : 'border-transparent text-slate-400 hover:text-slate-200'
