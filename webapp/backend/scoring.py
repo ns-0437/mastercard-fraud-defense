@@ -98,9 +98,27 @@ class Scorer:
         feats = self.build_features(txn)
         row = pd.DataFrame([{k: feats[k] for k in FEATURE_COLUMNS}])
         proba = float(self.model.predict_proba(row)[0, 1])
+
+        # Real per-instance explanation, not just global feature importance: XGBoost's
+        # native pred_contribs (an exact SHAP-equivalent for tree models, not an
+        # approximation) attributes THIS prediction's log-odds to each feature for
+        # THIS specific transaction -- a $2 payment and a $2M transfer can rely on
+        # completely different features even though both use the same global
+        # importance ranking. Previously this endpoint only showed "top signals
+        # globally, and this transaction's raw values" -- informative but not a real
+        # explanation of why THIS transaction scored the way it did.
+        booster = self.model.get_booster()
+        dmatrix = xgb.DMatrix(row, feature_names=FEATURE_COLUMNS)
+        contribs = booster.predict(dmatrix, pred_contribs=True)[0]  # last element is bias term
+        contrib_by_feature = dict(zip(FEATURE_COLUMNS, contribs[:-1].tolist()))
+        top_contributors = sorted(contrib_by_feature.items(), key=lambda kv: -abs(kv[1]))[:6]
+
         return {
             "fraud_probability": proba,
             "prediction": "fraud" if proba >= 0.5 else "legitimate",
             "features": feats,
             "top_model_signals": self.top_features,
+            "top_contributors_this_transaction": [
+                {"feature": f, "contribution": c, "value": feats.get(f)} for f, c in top_contributors
+            ],
         }

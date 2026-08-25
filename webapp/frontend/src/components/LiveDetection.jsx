@@ -97,6 +97,35 @@ export default function LiveDetection() {
               </div>
             </div>
 
+            {result.top_contributors_this_transaction && (
+              <div className="mt-4">
+                <h4 className="text-xs uppercase text-slate-500 mb-2">
+                  Why THIS transaction scored this way (per-instance, not global)
+                </h4>
+                <div className="space-y-1.5">
+                  {result.top_contributors_this_transaction.map((c) => (
+                    <div key={c.feature} className="flex items-center gap-3">
+                      <span className="text-xs text-slate-400 w-44 shrink-0 truncate">{c.feature}</span>
+                      <div className="flex-1 flex items-center h-4 bg-slate-800 rounded overflow-hidden">
+                        <div
+                          className={c.contribution >= 0 ? 'bg-red-500 ml-auto' : 'bg-emerald-500'}
+                          style={{ width: `${Math.min(100, Math.abs(c.contribution) * 8)}%`, height: '100%' }}
+                        />
+                      </div>
+                      <span className="text-xs text-slate-500 w-24 text-right shrink-0">
+                        {c.contribution >= 0 ? '+' : ''}{c.contribution.toFixed(2)} (={String(c.value)})
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-xs text-slate-500 mt-2">
+                  Green pushes toward legitimate, red pushes toward fraud — XGBoost's native
+                  per-instance contribution values (exact for tree models, not an approximation),
+                  not just which features matter globally.
+                </p>
+              </div>
+            )}
+
             <div className="mt-4">
               <h4 className="text-xs uppercase text-slate-500 mb-2">
                 Top signals the model relies on globally (this transaction's values)
