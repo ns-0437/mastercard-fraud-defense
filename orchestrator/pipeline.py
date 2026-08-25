@@ -228,8 +228,15 @@ def main():
     report = {
         "step_a_cycle1_model_vs_v2_attacks": {"overall": step_a_overall, "by_family": step_a_by_family},
         "step_b_cycle2_model": {"overall": cycle2_overall, "by_family": cycle2_by_family},
-        "regression_check": {"cycle1_v1_recall": cycle1_v1_recall, "cycle2_v1_recall": cycle2_v1_recall,
-                              "regressed_families": regressions},
+        "regression_check": {
+            "cycle1_v1_recall": cycle1_v1_recall, "cycle2_v1_recall": cycle2_v1_recall,
+            # Plain family-name strings, matching what the frontend's simple
+            # `.includes(fam)` membership check expects -- the fuller per-regression
+            # detail (miss counts etc.) lives in regression_details instead, so the
+            # two don't collide into one field with two incompatible shapes.
+            "regressed_families": [r["family"] for r in regressions],
+            "regression_details": regressions,
+        },
         "gate_pass": gate_pass,
     }
     ORCH_OUT.write_text(json.dumps(report, indent=2), encoding="utf-8")

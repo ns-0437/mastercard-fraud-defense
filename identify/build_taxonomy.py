@@ -40,9 +40,13 @@ def build_graph() -> nx.Graph:
 
 
 def to_json(g: nx.Graph) -> dict:
+    # Precomputed layout so the web frontend can render a plain SVG with static
+    # coordinates -- no client-side force-layout library/dependency needed.
+    layout = nx.spring_layout(g, seed=42, k=0.6)
     return {
         "nodes": [
-            {"id": n, **data} for n, data in g.nodes(data=True)
+            {"id": n, "x": float(layout[n][0]), "y": float(layout[n][1]), **data}
+            for n, data in g.nodes(data=True)
         ],
         "edges": [
             {"source": u, "target": v, "shared_techniques": data["shared_techniques"]}
