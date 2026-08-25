@@ -126,11 +126,34 @@ def check_non_degenerate(df: pd.DataFrame) -> tuple[bool, str]:
     return True, f"amount std=${std:,.2f}"
 
 
+# Family-specific semantic bounds -- NOT covered by check_plausibility's envelope check,
+# which only asks "has the real system ever produced a value in this range" and would
+# happily pass a $94.9M "structuring" transaction since PaySim's real TRANSFER max is
+# ~$92.4M. That number is numerically plausible but semantically nonsensical: structuring
+# specifically means staying just under a reporting threshold. Caught in a real run when
+# the LLM picked a lognormal shape with a large mean for this family (since fixed, see
+# llm_config_generator.py) -- this check stays as a second, independent guard against
+# the same failure mode recurring some other way.
+STRUCTURING_THRESHOLD = 10_000.0
+
+
+def check_family_semantics(df: pd.DataFrame) -> tuple[bool, str]:
+    family = df["attack_family"].iloc[0] if len(df) else ""
+    if family == "structuring_smurfing":
+        over_threshold = (df["amount"] >= STRUCTURING_THRESHOLD).sum()
+        if over_threshold > 0:
+            return False, (f"{over_threshold}/{len(df)} rows at/above the ${STRUCTURING_THRESHOLD:,.0f} "
+                            f"structuring threshold -- defeats the premise of this attack family")
+        return True, f"all amounts below ${STRUCTURING_THRESHOLD:,.0f} threshold"
+    return True, "no family-specific semantic constraint"
+
+
 CHECKS = {
     "schema": check_schema,
     "sanity": check_sanity,
     "conservation": check_conservation,
     "non_degenerate": check_non_degenerate,
+    "family_semantics": check_family_semantics,
 }
 BACKBONE_CHECKS = {
     "plausibility": check_plausibility,

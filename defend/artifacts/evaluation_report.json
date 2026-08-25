@@ -1,0 +1,26 @@
+{
+  "primary": {
+    "precision": 0.7576961271102284,
+    "recall": 0.9658227848101266,
+    "f1": 0.8491930996104619,
+    "pr_auc": 0.918483950820604,
+    "roc_auc": 0.9989962043177041,
+    "false_positive_rate_on_legit": 0.00395724873903242,
+    "confusion_matrix": {
+      "tn": 61415,
+      "fp": 244,
+      "fn": 27,
+      "tp": 763
+    },
+    "test_set_size": 62449,
+    "test_set_positives": 790
+  },
+  "per_family_recall": {
+    "ato_rapid_drain": 1.0,
+    "structuring_smurfing": 1.0,
+    "mule_network_layering": 0.5333333333333333,
+    "card_testing_burst": 0.9619047619047619
+  },
+  "secondary_native_fraud_recall": 0.00117813383600377,
+  "decision_threshold": 0.5
+}

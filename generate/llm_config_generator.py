@@ -27,13 +27,29 @@ load_dotenv(Path(__file__).parent.parent / ".env")
 
 # Hard bounds — the LLM can tune within these, never outside. Prevents a bad/hallucinated
 # response from producing an unusable or unrealistic simulation (e.g. negative amounts,
-# a 500-account graph that takes forever to simulate).
+# a 500-account graph that takes forever to simulate). n_instances floor raised from an
+# original 10 to 300: a run with the floor at 10 produced a 40-row mule-network family,
+# which after an 80/20 time split leaves ~8 test rows -- too small to trust any single
+# recall number from, on top of the already-disclosed small-sample limitation. This is
+# a statistical-power floor, not tuning toward a flattering result: it constrains scale,
+# not any outcome metric.
+# Real bug hit in production: structuring_smurfing's "low"/"high" are meant to be
+# FRACTIONS of a $10,000 threshold (simulators.py multiplies by scale_ref=threshold),
+# but the LLM once returned absolute dollar values there (e.g. 7000 instead of 0.7),
+# which then got multiplied by the threshold AGAIN -> a $94.9M "structuring"
+# transaction. A single shared (0, 1_000_000) bound doesn't distinguish "fraction of a
+# threshold" from "absolute dollars," so it let a units mismatch straight through.
+# Families in this set get low/high clamped to a fraction range instead.
+FRACTION_BASED_FAMILIES = {"structuring_smurfing"}
+
 BOUNDS = {
-    "n_instances": (10, 2000),
+    "n_instances": (300, 2000),
     "mean_log": (3.0, 12.0),
     "sigma_log": (0.05, 1.5),
     "low_frac_or_abs": (0.0, 1_000_000.0),
     "high_frac_or_abs": (0.0, 1_000_000.0),
+    "low_fraction": (0.05, 0.99),
+    "high_fraction": (0.05, 0.99),
     "burst_window_steps": (1, 200),
     "inter_event_jitter": (0.0, 1.0),
     "n_accounts": (1, 30),
@@ -61,14 +77,20 @@ Real-world mechanism (from our research taxonomy): {mechanism}
 Real backbone transaction statistics (from actual normal transaction data), for calibration:
 {backbone_stats}
 
+This attack family's amount distribution SHAPE is fixed to "{fixed_distribution}" (not
+your choice to change -- it reflects a real constraint of how this attack behaves, e.g.
+structuring is inherently bounded near a reporting threshold, not open-ended). Tune only
+the parameters within that shape.
+
+{low_high_unit_instruction}
+
 Propose numeric simulation parameters as a JSON object with exactly these keys:
 {{
   "n_instances": <int, number of synthetic fraud cases to generate>,
-  "amount_distribution": "lognormal" or "uniform",
-  "mean_log": <float, only if lognormal>,
-  "sigma_log": <float, only if lognormal>,
-  "low": <float, only if uniform>,
-  "high": <float, only if uniform>,
+  "mean_log": <float, only used if the fixed shape above is "lognormal">,
+  "sigma_log": <float, only used if the fixed shape above is "lognormal">,
+  "low": <float, only used if the fixed shape above is "uniform">,
+  "high": <float, only used if the fixed shape above is "uniform">,
   "burst_window_steps": <int, how many time steps the attack pattern spans>,
   "inter_event_jitter": <float 0-1>,
   "n_accounts": <int, size of any account network involved>,
@@ -150,10 +172,23 @@ def generate_attack_config(taxonomy_node: dict, backbone_stats: dict, use_llm: b
         print(f"[llm_config_generator] use_llm=False -> using default config for {family}")
         return default
 
+    if family in FRACTION_BASED_FAMILIES:
+        unit_instruction = (
+            'UNITS WARNING: for this family, "low" and "high" are FRACTIONS between 0 '
+            'and 1 of a $10,000 reporting threshold, NOT dollar amounts -- e.g. 0.7 '
+            'means $7,000, NOT $7,000,000 and NOT literally "7000". A value like 7000 '
+            'here would be multiplied by $10,000 again downstream and produce a '
+            'nonsensical $70,000,000 transaction.'
+        )
+    else:
+        unit_instruction = '"low" and "high" here ARE absolute dollar amounts.'
+
     prompt = PROMPT_TEMPLATE.format(
         attack_family=family,
         mechanism=taxonomy_node.get("mechanism", ""),
         backbone_stats=_build_backbone_stats_summary(backbone_stats),
+        fixed_distribution=default.amount.distribution,
+        low_high_unit_instruction=unit_instruction,
     )
     text, provider = _get_llm_response(prompt)
     if text is None:
@@ -163,7 +198,13 @@ def generate_attack_config(taxonomy_node: dict, backbone_stats: dict, use_llm: b
     try:
         raw = json.loads(_strip_code_fence(text))
 
-        amount_dist = raw.get("amount_distribution", default.amount.distribution)
+        # The LLM may only tune parameters WITHIN each family's real-world-mandated
+        # distribution shape, never switch shape entirely -- letting it choose freely
+        # broke structuring_smurfing in one run (it picked "lognormal" with a large
+        # mean, producing a $94.9M "structuring" transaction, which defeats the entire
+        # premise: structuring specifically means staying just under a reporting
+        # threshold, an inherently bounded/uniform pattern, not an open-ended one).
+        amount_dist = default.amount.distribution
         if amount_dist == "lognormal":
             amount = AmountDistParams(
                 distribution="lognormal",
@@ -171,10 +212,11 @@ def generate_attack_config(taxonomy_node: dict, backbone_stats: dict, use_llm: b
                 sigma_log=_clamp(raw.get("sigma_log", default.amount.sigma_log), "sigma_log"),
             )
         else:
+            bound_key = "fraction" if family in FRACTION_BASED_FAMILIES else "frac_or_abs"
             amount = AmountDistParams(
                 distribution="uniform",
-                low=_clamp(raw.get("low", default.amount.low), "low_frac_or_abs"),
-                high=_clamp(raw.get("high", default.amount.high), "high_frac_or_abs"),
+                low=_clamp(raw.get("low", default.amount.low), f"low_{bound_key}"),
+                high=_clamp(raw.get("high", default.amount.high), f"high_{bound_key}"),
             )
 
         config = AttackConfig(
@@ -192,6 +234,7 @@ def generate_attack_config(taxonomy_node: dict, backbone_stats: dict, use_llm: b
                 fanout=int(_clamp(raw.get("fanout", default.graph.fanout), "fanout")),
             ),
             notes=raw.get("reasoning", default.notes),
+            provider=provider,
         )
         print(f"[llm_config_generator] {provider}-refined config for {family}: {raw.get('reasoning', '')}")
         return config

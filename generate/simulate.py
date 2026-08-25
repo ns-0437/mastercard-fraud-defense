@@ -98,6 +98,7 @@ def main():
     rng = np.random.default_rng(args.seed)
 
     all_frames = []
+    configs_used = {}
     for family in families:
         default = DEFAULT_CONFIGS[family]
         taxonomy_node = {
@@ -114,11 +115,30 @@ def main():
         print(f"{family}: wrote {len(df)} rows -> {out_path}")
         all_frames.append(df)
 
+        # Persisted so the web app can show which provider actually produced this
+        # config and what its stated reasoning was -- otherwise that only ever existed
+        # as a line printed to a terminal no one but the developer ever saw.
+        configs_used[family] = {
+            "provider": config.provider,
+            "reasoning": config.notes,
+            "n_instances": config.n_instances,
+            "amount_distribution": config.amount.distribution,
+            "burst_window_steps": config.timing.burst_window_steps,
+            "n_accounts": config.graph.n_accounts,
+            "hops": config.graph.hops,
+            "fanout": config.graph.fanout,
+            "taxonomy_ref": config.taxonomy_ref,
+        }
+
     if len(all_frames) > 1:
         combined = pd.concat(all_frames, ignore_index=True)
         combined_path = out_dir / "combined.csv"
         combined.to_csv(combined_path, index=False)
         print(f"combined: {len(combined)} rows -> {combined_path}")
+
+    configs_path = Path(__file__).parent / "attack_configs_used.json"
+    configs_path.write_text(json.dumps(configs_used, indent=2), encoding="utf-8")
+    print(f"Wrote resolved configs (provider + reasoning) -> {configs_path}")
 
 
 if __name__ == "__main__":

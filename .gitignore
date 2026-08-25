@@ -1,9 +1,6 @@
 data/raw/*.csv
 data/processed/*
 !data/processed/.gitkeep
-data/synthetic/*
-!data/synthetic/.gitkeep
-defend/artifacts/
 __pycache__/
 *.pyc
 .venv/
@@ -12,5 +9,11 @@ node_modules/
 webapp/frontend/dist/
 .env
 *.log
-generate/fidelity_report.json
 *.zip
+# data/synthetic/, defend/artifacts/, and generate/fidelity_report.json are
+# DELIBERATELY tracked (not ignored) -- they're the actual output of the Generate and
+# Defend pillars (synthetic attacks, trained model, evaluation reports). Previously
+# gitignored, which meant the GitHub repo contained only the code that COULD regenerate
+# these, not the specific run they were documented from -- since LLM-driven generation
+# is non-deterministic, "fresh clone + rerun" could silently produce different numbers
+# than what's written in the docx/README. Committing the actual artifacts fixes that.

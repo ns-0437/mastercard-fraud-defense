@@ -1,0 +1,126 @@
+{
+  "ato_rapid_drain": {
+    "schema": {
+      "pass": true,
+      "detail": "ok"
+    },
+    "sanity": {
+      "pass": true,
+      "detail": "ok"
+    },
+    "conservation": {
+      "pass": true,
+      "detail": "0/746 rows (0.0%) violate balance conservation"
+    },
+    "non_degenerate": {
+      "pass": true,
+      "detail": "amount std=$135,377.92"
+    },
+    "family_semantics": {
+      "pass": true,
+      "detail": "no family-specific semantic constraint"
+    },
+    "plausibility": {
+      "pass": true,
+      "detail": "TRANSFER: KS stat=0.627 p=0.0000 | synth range=[$363.10, $1,380,536.56] vs real range=[$2.60, $92,445,516.64] | range_ok=True"
+    },
+    "type_validity": {
+      "pass": true,
+      "detail": "ok"
+    },
+    "_overall_pass": true
+  },
+  "card_testing_burst": {
+    "schema": {
+      "pass": true,
+      "detail": "ok"
+    },
+    "sanity": {
+      "pass": true,
+      "detail": "ok"
+    },
+    "conservation": {
+      "pass": true,
+      "detail": "no TRANSFER/CASH_OUT rows to check"
+    },
+    "non_degenerate": {
+      "pass": true,
+      "detail": "amount std=$4.02"
+    },
+    "family_semantics": {
+      "pass": true,
+      "detail": "no family-specific semantic constraint"
+    },
+    "plausibility": {
+      "pass": true,
+      "detail": "PAYMENT: KS stat=0.999 p=0.0000 | synth range=[$1.10, $14.96] vs real range=[$0.02, $238,637.98] | range_ok=True"
+    },
+    "type_validity": {
+      "pass": true,
+      "detail": "ok"
+    },
+    "_overall_pass": true
+  },
+  "mule_network_layering": {
+    "schema": {
+      "pass": true,
+      "detail": "ok"
+    },
+    "sanity": {
+      "pass": true,
+      "detail": "ok"
+    },
+    "conservation": {
+      "pass": true,
+      "detail": "0/40 rows (0.0%) violate balance conservation"
+    },
+    "non_degenerate": {
+      "pass": true,
+      "detail": "amount std=$3,826.35"
+    },
+    "family_semantics": {
+      "pass": true,
+      "detail": "no family-specific semantic constraint"
+    },
+    "plausibility": {
+      "pass": true,
+      "detail": "TRANSFER: KS stat=0.981 p=0.0000 | synth range=[$2,723.01, $16,392.04] vs real range=[$2.60, $92,445,516.64] | range_ok=True; CASH_OUT: KS stat=0.956 p=0.0000 | synth range=[$2,590.03, $13,570.65] vs real range=[$0.00, $10,000,000.00] | range_ok=True"
+    },
+    "type_validity": {
+      "pass": true,
+      "detail": "ok"
+    },
+    "_overall_pass": true
+  },
+  "structuring_smurfing": {
+    "schema": {
+      "pass": true,
+      "detail": "ok"
+    },
+    "sanity": {
+      "pass": true,
+      "detail": "ok"
+    },
+    "conservation": {
+      "pass": true,
+      "detail": "0/996 rows (0.0%) violate balance conservation"
+    },
+    "non_degenerate": {
+      "pass": true,
+      "detail": "amount std=$522.76"
+    },
+    "family_semantics": {
+      "pass": true,
+      "detail": "all amounts below $10,000 threshold"
+    },
+    "plausibility": {
+      "pass": true,
+      "detail": "TRANSFER: KS stat=0.989 p=0.0000 | synth range=[$8,004.87, $9,799.58] vs real range=[$2.60, $92,445,516.64] | range_ok=True"
+    },
+    "type_validity": {
+      "pass": true,
+      "detail": "ok"
+    },
+    "_overall_pass": true
+  }
+}

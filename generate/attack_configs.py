@@ -68,6 +68,10 @@ class AttackConfig:
     # doesn't present as a brand-new isolated node — directly targets the
     # orig_component_size / orig_is_low_activity graph features the detector leans on.
     warm_up: bool = False
+    # Which provider actually produced this config -- "hand-authored-fallback" if no
+    # LLM call succeeded. Surfaced in the web app so the "Generate" pillar's LLM-driven
+    # claim is verifiable, not just asserted.
+    provider: str = "hand-authored-fallback"
 
 
 # Hand-authored, domain-grounded fallback configs. Used when no ANTHROPIC_API_KEY is
@@ -99,7 +103,7 @@ DEFAULT_CONFIGS: dict[str, AttackConfig] = {
     "mule_network_layering": AttackConfig(
         attack_family="mule_network_layering",
         taxonomy_ref="mule_synthetic_network_generation",
-        n_instances=250,
+        n_instances=320,
         amount=AmountDistParams(distribution="lognormal", mean_log=8.5, sigma_log=0.4),
         timing=TimingParams(burst_window_steps=12, inter_event_jitter=0.4),
         graph=GraphParams(n_accounts=8, hops=3, fanout=2),

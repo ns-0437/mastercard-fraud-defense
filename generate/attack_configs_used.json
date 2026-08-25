@@ -1,0 +1,46 @@
+{
+  "ato_rapid_drain": {
+    "provider": "gemini",
+    "reasoning": "ATO rapid drain targets high-value account balances in quick succession over a narrow timeframe, resulting in elevated lognormal transaction amounts and minimal network hops prior to exfiltration.",
+    "n_instances": 300,
+    "amount_distribution": "lognormal",
+    "burst_window_steps": 5,
+    "n_accounts": 2,
+    "hops": 1,
+    "fanout": 3,
+    "taxonomy_ref": "ato_llm_support_pretexting"
+  },
+  "structuring_smurfing": {
+    "provider": "gemini",
+    "reasoning": "Structuring inherently tightly clusters transaction values just below the regulatory threshold (0.80 to 0.98 of $10,000) across multiple intermediate smurf accounts in a short time frame to evade single-transaction reporting limits.",
+    "n_instances": 1000,
+    "amount_distribution": "uniform",
+    "burst_window_steps": 24,
+    "n_accounts": 6,
+    "hops": 2,
+    "fanout": 3,
+    "taxonomy_ref": "mule_adaptive_layering_vs_aml"
+  },
+  "mule_network_layering": {
+    "provider": "gemini",
+    "reasoning": "Mule network layering coordinates transfers slightly below reporting thresholds across multi-hop synthetic account chains within short time windows to obfuscate audit trails while mimicking organic payment distributions.",
+    "n_instances": 300,
+    "amount_distribution": "lognormal",
+    "burst_window_steps": 48,
+    "n_accounts": 30,
+    "hops": 3,
+    "fanout": 3,
+    "taxonomy_ref": "mule_synthetic_network_generation"
+  },
+  "card_testing_burst": {
+    "provider": "gemini",
+    "reasoning": "Card testing burst attacks issue rapid, low-value uniform authorizations between $1.00 and $15.00 across multiple accounts within a tight step window to confirm active BINs while staying under basic velocity triggers.",
+    "n_instances": 300,
+    "amount_distribution": "uniform",
+    "burst_window_steps": 10,
+    "n_accounts": 30,
+    "hops": 1,
+    "fanout": 5,
+    "taxonomy_ref": "cnp_ai_card_testing"
+  }
+}

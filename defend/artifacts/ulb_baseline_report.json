@@ -1,0 +1,15 @@
+{
+  "precision": 0.7916666666666666,
+  "recall": 0.76,
+  "f1": 0.7755102040816326,
+  "pr_auc": 0.7976361524595099,
+  "roc_auc": 0.9870876181435712,
+  "false_positive_rate": 0.00026368063002091865,
+  "confusion_matrix": {
+    "tn": 56872,
+    "fp": 15,
+    "fn": 18,
+    "tp": 57
+  },
+  "note": "Independent methodology validation, not a literal transfer/holdout test of the PaySim-trained model -- see module docstring."
+}
