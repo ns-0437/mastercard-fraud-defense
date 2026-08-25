@@ -40,7 +40,10 @@ export default function Overview({ onNavigate }) {
       <PipelineDiagram />
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-slate-900 rounded-xl border border-slate-800 py-6">
-        <Stat value={taxonomy?.nodes?.length ?? '—'} label="attack vectors, 8 channels" />
+        <Stat
+          value={taxonomy?.nodes?.length ?? '—'}
+          label={`attack vectors, ${taxonomy ? new Set(taxonomy.nodes.map((n) => n.channel)).size : '—'} channels`}
+        />
         <Stat value={primary ? `${(primary.pr_auc * 100).toFixed(1)}%` : '—'} label="PR-AUC, synthetic attacks" />
         <Stat value={cycles?.ulb_baseline ? `${(cycles.ulb_baseline.pr_auc * 100).toFixed(1)}%` : '—'} label="PR-AUC, independent real dataset" />
         <Stat value={adversarial ? `${adversarial.n_caught}/${adversarial.n_total}` : '—'} label="novel attacks caught (self-test)" />

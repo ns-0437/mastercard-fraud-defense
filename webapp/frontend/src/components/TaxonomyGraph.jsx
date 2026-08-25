@@ -46,12 +46,13 @@ export default function TaxonomyGraph() {
 
   const selectedNode = data.nodes.find((n) => n.id === selected)
   const active = hovered || selected
+  const channelCount = new Set(data.nodes.map((n) => n.channel)).size
 
   return (
     <div className="flex flex-col md:flex-row gap-6">
       <div className="flex-1 min-w-0 bg-slate-900 rounded-xl border border-slate-800 p-4">
         <p className="text-sm text-slate-400 mb-2">
-          {data.nodes.length} attack vectors across 8 channels · {data.edges.length} shared-technique links ·
+          {data.nodes.length} attack vectors across {channelCount} channels · {data.edges.length} shared-technique links ·
           hover to preview, click for detail, click a channel below to isolate it
         </p>
         <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-[560px]">
