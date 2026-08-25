@@ -12,3 +12,4 @@ node_modules/
 webapp/frontend/dist/
 .env
 *.log
+generate/fidelity_report.json
