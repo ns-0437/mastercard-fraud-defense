@@ -4,38 +4,38 @@
       "n": 2495,
       "n_positive": 2495,
       "precision": 1.0,
-      "recall": 0.6789579158316633,
-      "f1": 0.8087849128670327,
+      "recall": 0.6609218436873747,
+      "f1": 0.7958494208494209,
       "pr_auc": null,
       "fp": 0,
       "tn": 0,
       "false_positive_rate": null
     },
     "by_family": {
-      "ato_rapid_drain_v2": 0.9979899497487437,
-      "card_testing_burst_v2": 0.0025,
-      "mule_network_layering_v2": 0.99,
+      "ato_rapid_drain_v2": 0.9708542713567839,
+      "card_testing_burst_v2": 0.00375,
+      "mule_network_layering_v2": 0.8,
       "structuring_smurfing_v2": 1.0
     }
   },
   "step_b_cycle2_model": {
     "overall": {
-      "n": 62842,
-      "n_positive": 2540,
-      "precision": 0.9996055226824457,
-      "recall": 0.9976377952755906,
-      "f1": 0.9986206896551724,
-      "pr_auc": 0.9999803269001278,
-      "fp": 1,
-      "tn": 60301,
-      "false_positive_rate": 1.6583197903883785e-05
+      "n": 63030,
+      "n_positive": 2148,
+      "precision": 0.9825688073394495,
+      "recall": 0.9972067039106145,
+      "f1": 0.9898336414048059,
+      "pr_auc": 0.9997609047843395,
+      "fp": 38,
+      "tn": 60844,
+      "false_positive_rate": 0.000624158207680431
     },
     "by_family": {
       "ato_rapid_drain": 1.0,
-      "ato_rapid_drain_v2": 1.0,
-      "card_testing_burst": 1.0,
+      "ato_rapid_drain_v2": 0.9981785063752276,
+      "card_testing_burst": 0.9904761904761905,
       "card_testing_burst_v2": 1.0,
-      "mule_network_layering": 0.8928571428571429,
+      "mule_network_layering": 1.0,
       "mule_network_layering_v2": 1.0,
       "structuring_smurfing": 1.0,
       "structuring_smurfing_v2": 1.0
@@ -43,27 +43,19 @@
   },
   "regression_check": {
     "cycle1_v1_recall": {
-      "ato_rapid_drain": 0.9939148073022313,
-      "card_testing_burst": 1.0,
-      "mule_network_layering": 0.9821428571428571,
-      "structuring_smurfing": 0.9934426229508196
+      "ato_rapid_drain": 0.9900497512437811,
+      "card_testing_burst": 0.96,
+      "mule_network_layering": 0.5333333333333333,
+      "structuring_smurfing": 1.0
     },
     "cycle2_v1_recall": {
       "ato_rapid_drain": 1.0,
-      "card_testing_burst": 1.0,
-      "mule_network_layering": 0.8928571428571429,
+      "card_testing_burst": 0.9904761904761905,
+      "mule_network_layering": 1.0,
       "structuring_smurfing": 1.0
     },
-    "regressed_families": [
-      {
-        "family": "mule_network_layering",
-        "n": 56,
-        "cycle1_recall": 0.9821428571428571,
-        "cycle2_recall": 0.8928571428571429,
-        "misses_cycle1": 1,
-        "misses_cycle2": 6
-      }
-    ]
+    "regressed_families": [],
+    "regression_details": []
   },
-  "gate_pass": false
+  "gate_pass": true
 }

@@ -57,6 +57,18 @@ do not skip gates.
   writeup of 3 generated cases.
 - **Gate**: fidelity validation passes for at least 4 distinct attack families; failures
   are fixed by adjusting the simulator, not by lowering the bar in the validator.
+- **Aug 25 update**: LLM path is real, not decorative. Anthropic key exists but has a
+  zero credit balance (unresolved -- top up at console.anthropic.com when convenient,
+  not blocking). A funded Gemini key (`GEMINI_API_KEY`, free tier) is wired in as an
+  automatic fallback (see `generate/llm_config_generator.py`'s provider order) and is
+  what actually produced the current `data/synthetic/*.csv` -- confirmed by real
+  per-family reasoning strings in the run log, not just "it didn't error." Regenerating
+  once the LLM started working (rather than leaving Phase 3+ built on hand-authored
+  fallback data) changed the downstream numbers: PR-AUC on PaySim dropped from a
+  suspicious 0.999 to a more credible 0.9185, and `mule_network_layering` now has a
+  small n=15 test sample because the LLM chose a smaller instance count for it than the
+  hand-authored default did -- disclosed as a real limitation in Phase 3, not smoothed
+  over.
 
 ## Phase 3 — Defend: detection model
 - Feature engineering: tabular (amount, velocity, time-of-day, account age) + graph
@@ -92,20 +104,21 @@ do not skip gates.
 - **Gate**: run 2 full cycles. Metrics on the *original* attack set must not regress in
   cycle 2 (see SKILL.md gate). This is the single most important gate in the whole
   project — it's the actual proof of the "closed loop," not a diagram.
-- **Actual result (Aug 25)**: Step A found the cycle-1 detector was nearly blind to a
-  hardened card-testing variant (0.25% recall, vs. 0.98%+ on everything else) —
-  confirming the Phase 3 caveat that the original 0.999 PR-AUC was an easy-benchmark
-  effect, not a robust result. Step B (retrain on v1+v2) recovered card-testing to 100%
-  recall with zero regression on the other 3 families, after one legitimate fix
-  (per-family balanced sample weights, since pooled family sizes were uneven). One
-  family (mule_network_layering, n=56 test rows) still regressed 0.982->0.893 after
-  that fix; a second fix aimed specifically at that number wasn't attempted, because
-  that would be tuning the eval to pass rather than fixing the model. Gate is
-  technically FAIL by its literal definition. Reported as-is in orchestrator/pipeline.py
-  output and in the docx — the closed loop's primary claim (it closes a real, severe
-  blind spot) is demonstrated regardless; the honest secondary finding (closing one gap
-  can reopen a smaller one on a low-sample family) is itself a legitimate, disclosable
-  research result, not a failure to hide.
+- **First run (Aug 25, hand-authored v1 configs, no funded LLM yet)**: Step A found the
+  cycle-1 detector nearly blind to hardened card-testing (0.25% recall). Step B
+  recovered it to 100% with one legitimate fix (per-family balanced sample weights),
+  but mule_network_layering (n=56) regressed 0.982->0.893 and wasn't force-fixed
+  further. Gate technically FAILed.
+- **Re-run (Aug 25, after Gemini key funded -- v1 attacks are now genuinely
+  LLM-generated, see Phase 2 update)**: same core finding replicated independently --
+  cycle-1 model recall on hardened card-testing was 0.37%, confirming this is a real,
+  reproducible blind spot and not an artifact of one specific hand-authored config.
+  After retraining on v1+v2 with the same balanced-sample-weight fix, ALL FOUR original
+  families held or improved (mule_network_layering actually went 0.533->1.000, since
+  its LLM-chosen v1 config happened to produce a smaller, easier initial sample this
+  time). **Gate PASS.** Kept the earlier FAIL in this log rather than deleting it —
+  the fact that the same red-team finding reproduced across two independently-generated
+  attack sets is itself stronger evidence than either run alone.
 
 ## Phase 5 — Web prototype
 - FastAPI backend exposing: taxonomy graph (for viz), a "run detection on this

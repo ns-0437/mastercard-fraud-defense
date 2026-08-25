@@ -142,10 +142,19 @@ export default function ClosedLoopResults() {
                 </tbody>
               </table>
               <p className="text-xs text-slate-500 mt-2">
-                mule_network_layering's regression (n=56 test rows) was investigated and reported as-is
-                rather than tuned further to force a clean pass — see docs/PHASES.md Phase 4 for the
-                full reasoning. The closed loop's primary claim — closing a severe, real blind spot on
-                card-testing — holds regardless.
+                {loop.regression_check.regressed_families.length === 0 ? (
+                  <>No regression on any original family after adding hardened variants to training —
+                  the closed loop closed the card-testing blind spot without trading away detection on
+                  the others. See docs/PHASES.md Phase 4 for the full run history, including an earlier
+                  run (before the LLM config path was funded) where one low-sample family did regress
+                  and was reported as-is rather than tuned to force a pass.</>
+                ) : (
+                  <>{loop.regression_check.regressed_families.join(', ')} regressed and {
+                    loop.regression_check.regressed_families.length === 1 ? 'was' : 'were'
+                  } reported as-is rather than tuned further to force a clean pass — see
+                  docs/PHASES.md Phase 4 for the full reasoning. The closed loop's primary claim —
+                  closing a severe, real blind spot on card-testing — holds regardless.</>
+                )}
               </p>
             </div>
           </div>

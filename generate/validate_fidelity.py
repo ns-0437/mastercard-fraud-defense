@@ -158,7 +158,7 @@ def main():
 
     backbone = load_backbone()
     synth_dir = Path(args.synthetic)
-    family_files = sorted(p for p in synth_dir.glob("*.csv") if p.stem != "combined")
+    family_files = sorted(p for p in synth_dir.glob("*.csv") if not p.stem.startswith("combined"))
 
     if not family_files:
         raise SystemExit(f"no per-family synthetic CSVs found in {synth_dir} — run simulate.py first")
