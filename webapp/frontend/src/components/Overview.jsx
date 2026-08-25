@@ -68,21 +68,22 @@ export default function Overview({ onNavigate }) {
               ? `Hardened variants of the same attacks, spread over time and toned down, dropped ${weakestV2[0]}'s recall to ${(weakestV2[1] * 100).toFixed(1)}%. `
               : ''}
             Retrained on the harder attacks and recovered full detection with zero regression on the
-            originals — this exact experiment run 3 times independently, since the specific gap it finds
+            originals — this exact experiment run 5 times independently, since the specific gap it finds
             varies with each LLM-driven generation.{' '}
             <button onClick={() => onNavigate?.('loop')} className="text-emerald-400 hover:underline">
-              See all 3 runs →
+              See all 5 runs →
             </button>
           </p>
         </div>
 
         <div className="bg-slate-900 rounded-xl border border-red-900/50 p-5">
-          <div className="text-xs font-semibold text-red-400 mb-1">3. Then found the edge of that fix</div>
+          <div className="text-xs font-semibold text-red-400 mb-1">3. Then found the edge of that fix — twice</div>
           <p className="text-sm text-slate-300">
-            {adversarial && `${adversarial.n_total - adversarial.n_caught} of ${adversarial.n_total} `}
-            hand-crafted attacks, built to look structurally unremarkable rather than to vary a known
-            pattern, still evaded the retrained detector — including one at a 0% fraud probability.
-            Disclosed here, not smoothed over.{' '}
+            {adversarial && adversarial.n_caught < adversarial.n_total
+              ? `${adversarial.n_total - adversarial.n_caught} of ${adversarial.n_total} hand-crafted attacks, built to look structurally unremarkable rather than to vary a known pattern, still evaded the retrained detector. Disclosed here, not smoothed over.`
+              : adversarial
+                ? `${adversarial.n_caught} of ${adversarial.n_total} hand-crafted, structurally-unremarkable attacks are now caught — but only after finding that the test itself was buggy (scoring against the wrong model) and then genuinely widening training coverage to close what the corrected test found. Both the bug and the fix are disclosed, not just the final number.`
+                : ''}{' '}
             <button onClick={() => onNavigate?.('loop')} className="text-emerald-400 hover:underline">
               See which ones →
             </button>

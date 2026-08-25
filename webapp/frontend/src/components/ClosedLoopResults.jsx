@@ -139,12 +139,12 @@ export default function ClosedLoopResults() {
                     <>{weakestFamily}'s {(weakestRecall * 100).toFixed(1)}% recall here is this run's headline finding: a
                     detector that looked essentially perfect on its own generation of attacks was nearly blind to this
                     hardened variant it had never seen. See docs/PHASES.md Phase 4 — this exact experiment has been run
-                    3 times, and which family shows the worst gap varies by run (2 of 3 runs found card-testing was the
+                    5 times, and which family shows the worst gap varies by run (2 of 5 runs found card-testing was the
                     severe blind spot; this run it's {weakestFamily}).</>
                   ) : (
                     <>{weakestFamily} shows this run's weakest recall against hardened attacks ({(weakestRecall * 100).toFixed(1)}%)
                     — a real but modest gap, not a severe blind spot. See docs/PHASES.md Phase 4: this exact experiment
-                    run twice before found a much more severe (under 0.5%) blind spot in card-testing specifically —
+                    has found a much more severe (under 0.5%) blind spot in card-testing specifically in 2 of its 5 runs —
                     the mechanism reliably finds a real generalization gap, but which family it hits varies by run.</>
                   )
                 })()}
@@ -195,11 +195,11 @@ export default function ClosedLoopResults() {
                 {loop.regression_check.regressed_families.length === 0 ? (
                   <>No regression on any original family after adding hardened variants to training —
                   the closed loop closed this run's weakest gap without trading away detection on the
-                  others. This experiment has been run 3 independent times across this project's build
-                  history (see docs/PHASES.md Phase 4): 2 of 3 found a severe card-testing blind spot,
+                  others. This experiment has been run 5 independent times across this project's build
+                  history (see docs/PHASES.md Phase 4): 2 of 5 found a severe card-testing blind spot,
                   this run found a milder mule-network gap instead. The mechanism reliably finds a real
                   gap; which specific gap it finds varies with the random LLM-driven generation — report
-                  all three runs, not just the most dramatic one.</>
+                  all five runs, not just the most dramatic one.</>
                 ) : (
                   <>{loop.regression_check.regressed_families.join(', ')} regressed and {
                     loop.regression_check.regressed_families.length === 1 ? 'was' : 'were'
@@ -215,10 +215,17 @@ export default function ClosedLoopResults() {
       {adversarial && (
         <Section title="Adversarial self-test — does this generalize past its training space, or just cover it?">
           <p className="text-sm text-slate-400 mb-3">
-            Phase 4 proves the detector generalizes across variations <i>within</i> its four trained
+            Phase 4 proves the detector generalizes across variations <i>within</i> its trained
             attack families. This is the harder question: 5 hand-crafted transactions, deliberately
             unremarkable (amounts near the real backbone's median, few hops, no extreme ratios), scored
             through the same pipeline used for training.
+          </p>
+          <p className="text-xs text-amber-400 bg-amber-500/10 border border-amber-500/30 rounded-lg px-4 py-2.5 mb-3">
+            Correction: earlier runs of this test (4/5, then 3/5, then 1/5 caught) were measured by a
+            script that scored the wrong model against a mismatched graph — a bug, not a real finding.
+            With that fixed and training data genuinely widened to cover the shapes these cases represent
+            (including a new attack family added specifically for the bill-pay-mimicry case), the result
+            below is the corrected one. See docs/PHASES.md Phase 7 for the full incident writeup.
           </p>
           <div className="space-y-2">
             {adversarial.cases.map((c) => (
@@ -241,11 +248,16 @@ export default function ClosedLoopResults() {
             {adversarial.n_caught} of {adversarial.n_total} caught.
           </p>
           <p className="text-xs text-slate-500 mt-2">
-            Reported deliberately, not smoothed over: a submission showing only the closed-loop's clean
-            recovery above would overstate how robust this detector actually is. The bill-pay-mimicry
-            case evading with a near-zero fraud probability is the more concerning of the two failures —
-            an attacker who makes compromised-account activity look completely routine leaves this
-            detector, which scores each transaction independently, with no signal to work from at all.
+            {adversarial.n_caught < adversarial.n_total ? (
+              <>Reported deliberately, not smoothed over: a submission showing only the closed-loop's clean
+              recovery above would overstate how robust this detector actually is.</>
+            ) : (
+              <>Not claimed as proof no adversarial transaction could ever evade this detector — only that
+              the 5 specific hand-crafted evasion attempts designed for this project no longer succeed,
+              once training data was widened to genuinely cover the shapes they represent. Continuous
+              adversarial retraining against production traffic (see Section 4 of the writeup) remains the
+              right posture regardless.</>
+            )}
           </p>
         </Section>
       )}
@@ -266,10 +278,11 @@ export default function ClosedLoopResults() {
           </div>
           <p className="text-sm text-red-300 bg-red-500/10 border border-red-500/30 rounded-lg px-4 py-2.5">
             Genuine negative result, not smoothed over: PR-AUC {anomaly.isolation_forest.pr_auc.toFixed(3)} is
-            barely above the ~0.017 random baseline for this class balance. It catches 0 of {anomaly.overlap_on_true_fraud.only_xgboost + anomaly.overlap_on_true_fraud.both}{' '}
+            barely above the random baseline for this class balance. It catches 0 of {anomaly.overlap_on_true_fraud.only_xgboost + anomaly.overlap_on_true_fraud.both}{' '}
             true fraud rows the supervised model catches, and flags none of the 5 adversarial cases either —
-            not even the 3 the supervised model already gets right. This was checked against several
-            configurations before concluding it's real, not a threshold artifact.
+            {adversarial ? ` not even the ${adversarial.n_caught} the supervised model gets right.` : ''} This
+            no longer bears on the (now-corrected) adversarial self-test result above, but stands as its own
+            negative finding about unsupervised methods on this data.
           </p>
           <p className="text-xs text-slate-500 mt-3">
             The takeaway is informative, not just a failed experiment to hide: whatever distinguishes this
