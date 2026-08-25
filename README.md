@@ -10,9 +10,14 @@ See [CLAUDE.md](CLAUDE.md) for architecture/constraints, [docs/PHASES.md](docs/P
 for the build plan, [SKILL.md](SKILL.md) for how to run each piece.
 
 ## Status
-Phases 0-5 built and gate-checked (see docs/PHASES.md for the full record, including
-the honest FAIL on one small-sample regression in Phase 4 — not hidden). Remaining:
-Phase 6 (.docx walkthrough), Phase 7 (bulletproofing pass), Phase 8 (submission).
+Phases 0-5 built, gate-checked, and deployed (see docs/PHASES.md for the full record,
+including an earlier FAIL on one small-sample regression in Phase 4 that was kept in
+the log rather than deleted once it was superseded). Remaining: Phase 6 (.docx
+walkthrough), Phase 7 (bulletproofing pass), Phase 8 (submission).
+
+**Live demo**: https://mastercard-frontend-612620013489.us-central1.run.app
+(backend: https://mastercard-backend-612620013489.us-central1.run.app) — both on GCP
+Cloud Run, project `mastercard-fraud-defense`.
 
 ## Quickstart
 Requires Python 3.11+, Node 20+, and both real datasets in `data/raw/` (see
