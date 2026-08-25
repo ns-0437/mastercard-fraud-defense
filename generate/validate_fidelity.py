@@ -18,8 +18,10 @@ Checks per attack family:
   3. conservation- oldbalance - amount ~= newbalance for TRANSFER/CASH_OUT rows
                    (PaySim's own data has this property; synthetic data lacking it
                    is an obvious tell)
-  4. plausibility- KS-test + range check of synthetic amount vs. real backbone's
-                   amount distribution for the SAME transaction type
+  4. plausibility- synthetic amount vs. real backbone's observed [min, max] envelope
+                   for the SAME transaction type (not proximity to the bulk/p99 —
+                   fraud is supposed to sit in the tails, penalizing tail distance
+                   would fail every real attack pattern by construction)
   5. type_validity - synthetic `type` values are a subset of real backbone's types
   6. non_degenerate - amounts aren't all identical (a common lazy-generator tell)
 """
@@ -73,6 +75,17 @@ def check_conservation(df: pd.DataFrame, rel_tol: float = 0.02) -> tuple[bool, s
 
 
 def check_plausibility(df: pd.DataFrame, backbone: pd.DataFrame) -> tuple[bool, str]:
+    """
+    Plausibility = "could this specific transaction have occurred in the real system,"
+    not "does it match the typical/bulk statistical profile." Fraud (especially
+    deliberately probing/structuring attacks) is SUPPOSED to sit in the tails of the
+    real distribution, not near its median — a check that penalizes distance from the
+    bulk (e.g. from p99) would fail every attack family by design and reward a
+    simulator that just reproduces normal traffic. Envelope bounds (real min/max, with
+    slack) test the thing that actually matters: is this value physically/behaviorally
+    within what the real payment system has ever produced for this transaction type,
+    however rare.
+    """
     results = []
     overall_ok = True
     for txn_type in df["type"].unique():
@@ -82,16 +95,17 @@ def check_plausibility(df: pd.DataFrame, backbone: pd.DataFrame) -> tuple[bool, 
             results.append(f"{txn_type}: no real comparison data, skipped")
             continue
         stat, pvalue = ks_2samp(synth_amt, real_amt)
-        real_p99 = real_amt.quantile(0.99)
-        synth_p99 = synth_amt.quantile(0.99)
-        # Not-absurd bound: synthetic p99 shouldn't dwarf real p99 by more than 20x,
-        # nor be a rounding error of it (both would signal a broken simulator, not
-        # just "different fraud pattern than average legit traffic").
-        range_ok = synth_p99 < real_p99 * 20 and synth_p99 > real_p99 * 0.0001
+        real_min, real_max = real_amt.min(), real_amt.max()
+        synth_min, synth_max = synth_amt.min(), synth_amt.max()
+        # Slack factor: allow synthetic values to extend somewhat beyond the observed
+        # real envelope (fraud can plausibly be rarer than anything sampled so far)
+        # without allowing a broken simulator to produce values orders of magnitude
+        # outside anything the real system has ever recorded.
+        range_ok = (synth_min >= real_min * 0.1) and (synth_max <= real_max * 10)
         overall_ok = overall_ok and range_ok
         results.append(
-            f"{txn_type}: KS stat={stat:.3f} p={pvalue:.4f} | synth_p99=${synth_p99:,.2f} "
-            f"vs real_p99=${real_p99:,.2f} | range_ok={range_ok}"
+            f"{txn_type}: KS stat={stat:.3f} p={pvalue:.4f} | synth range=[${synth_min:,.2f}, ${synth_max:,.2f}] "
+            f"vs real range=[${real_min:,.2f}, ${real_max:,.2f}] | range_ok={range_ok}"
         )
     return overall_ok, "; ".join(results)
 

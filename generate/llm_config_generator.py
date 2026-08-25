@@ -11,8 +11,14 @@ must keep working without an API key.
 import json
 import os
 from dataclasses import asdict
+from pathlib import Path
+
+from dotenv import load_dotenv
 
 from attack_configs import AttackConfig, AmountDistParams, TimingParams, GraphParams, DEFAULT_CONFIGS
+
+# Loads ANTHROPIC_API_KEY from the repo-root .env if it's not already in the environment.
+load_dotenv(Path(__file__).parent.parent / ".env")
 
 # Hard bounds — the LLM can tune within these, never outside. Prevents a bad/hallucinated
 # response from producing an unusable or unrealistic simulation (e.g. negative amounts,

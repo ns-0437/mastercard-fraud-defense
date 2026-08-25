@@ -5,6 +5,7 @@ scipy>=1.11
 scikit-learn>=1.4
 xgboost>=2.0
 anthropic>=0.40
+python-dotenv>=1.0
 fastapi>=0.110
 uvicorn>=0.29
 python-multipart

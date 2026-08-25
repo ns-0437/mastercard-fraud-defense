@@ -13,3 +13,4 @@ webapp/frontend/dist/
 .env
 *.log
 generate/fidelity_report.json
+*.zip
