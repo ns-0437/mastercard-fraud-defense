@@ -65,10 +65,20 @@ do not skip gates.
 - Train XGBoost/LightGBM. Time-based train/test split (no shuffling across time —
   leakage kills credibility with judges who know fraud ML).
 - Report precision/recall/F1/PR-AUC on synthetic-attack test set.
-- Run `evaluate.py --holdout ulb_creditcard` **once**, at the end — report that number
-  even if it's worse. It almost certainly will be, and that's fine to say plainly: the
-  model is tuned for payment-transfer fraud patterns, not card-swipe fraud; report it as
-  a scoped limitation, not a hidden flaw.
+- **Correction made after inspecting both real files (Aug 25)**: ULB Credit Card Fraud
+  has no account/counterparty fields at all — just PCA-anonymized `V1`-`V28` + `Amount`
+  + `Time`. There is no graph to build and no way to literally run the PaySim-trained
+  model on it. The original plan below ("run evaluate.py --holdout ulb_creditcard" on
+  the same model) was wrong and would have produced a meaningless number dressed up as
+  a generalization test. The honest version: train a SEPARATE, methodologically
+  comparable XGBoost model on ULB (same time-based split discipline, same imbalance
+  handling) and report both results side by side as "same approach validated
+  independently on a genuinely different real fraud dataset" — this proves the
+  *methodology* isn't a PaySim-specific trick, not that one model transfers across
+  domains. Say this distinction explicitly in the docx; don't blur it.
+- Run `train_ulb_baseline.py` **once** on ULB, report its metrics even if worse than
+  the PaySim model's — that's expected (different fraud type, no graph signal
+  available) and is a scoped limitation to state plainly, not a hidden flaw.
 - **Gate**: PR-AUC reported (not just accuracy — accuracy is meaningless on imbalanced
   fraud data and using it alone signals to judges you don't know that). False positive
   rate on legitimate transactions explicitly stated.

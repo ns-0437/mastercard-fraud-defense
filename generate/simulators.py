@@ -155,15 +155,22 @@ def simulate_card_testing_burst(config: AttackConfig, backbone: pd.DataFrame, rn
         orig = _new_account_id("CARDTEST", actor_i)
         step = int(_sample_steps(backbone, 1, config.timing.burst_window_steps, rng)[0])
         amounts = _draw_amounts(config, config.graph.fanout, rng)
+        # Origin balance drawn independently of probe amount (real accounts' balances
+        # don't scale with a single transaction's size) -- a fixed amount*k multiplier
+        # here would make amount_to_orig_balance_ratio a near-constant, trivially
+        # learnable artifact of the simulator rather than a real fraud signal.
+        cur_bal = float(rng.lognormal(mean=8.5, sigma=1.3))
         for j, amt in enumerate(amounts):
             dest = _new_account_id(f"MERCH{actor_i}", j)
+            new_bal = max(0.0, cur_bal - amt)
             rows.append({
                 "step": step, "type": "PAYMENT", "amount": round(float(amt), 2),
-                "nameOrig": orig, "oldbalanceOrg": round(float(amt) * 50, 2),
-                "newbalanceOrig": round(float(amt) * 50 - float(amt), 2), "nameDest": dest,
+                "nameOrig": orig, "oldbalanceOrg": round(cur_bal, 2),
+                "newbalanceOrig": round(new_bal, 2), "nameDest": dest,
                 "oldbalanceDest": 0.0, "newbalanceDest": round(float(amt), 2),
                 "isFraud": 1, "isFlaggedFraud": 0,
             })
+            cur_bal = new_bal
 
     df = pd.DataFrame(rows, columns=PAYSIM_COLUMNS)
     df["attack_family"] = config.attack_family
