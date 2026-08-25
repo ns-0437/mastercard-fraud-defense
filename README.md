@@ -19,6 +19,8 @@ walkthrough), Phase 7 (bulletproofing pass), Phase 8 (submission).
 (backend: https://mastercard-backend-612620013489.us-central1.run.app) — both on GCP
 Cloud Run, project `mastercard-fraud-defense`.
 
+**Repo**: https://github.com/ns-0437/mastercard-fraud-defense
+
 ## Quickstart
 Requires Python 3.11+, Node 20+, and both real datasets in `data/raw/` (see
 `data/raw/README.md`). Optionally set `ANTHROPIC_API_KEY` / `GEMINI_API_KEY` /
