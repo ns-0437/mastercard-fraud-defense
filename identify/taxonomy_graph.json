@@ -1,0 +1,889 @@
+{
+  "nodes": [
+    {
+      "id": "cnp_ai_card_testing",
+      "name": "AI-orchestrated card testing / BIN attack",
+      "channel": "card-not-present",
+      "mechanism": "An LLM-driven agent automates rapid low-value authorization attempts across a range of card numbers (BIN ranges), adapting amount, merchant category, and timing per-attempt based on which prior attempts were declined vs. flagged, to find live card numbers while staying under naive velocity thresholds.",
+      "grounding": "Card testing against low-friction merchant checkouts is a known, long-standing fraud pattern (card testing/carding); the GenAI delta is an agent that adapts its own probing strategy in real time instead of running a static script, making fixed velocity rules and static BIN blocklists far less effective.",
+      "techniques": [
+        "automation_at_scale",
+        "adversarial_evasion"
+      ],
+      "severity": "high",
+      "likelihood": "high"
+    },
+    {
+      "id": "cnp_llm_dispute_narratives",
+      "name": "LLM-generated friendly-fraud chargeback narratives",
+      "channel": "card-not-present",
+      "mechanism": "An LLM generates individually-tailored, plausible dispute narratives ('item never arrived', 'unauthorized use') at scale for chargebacks on legitimately-received goods, each narrative varied enough to avoid text-similarity fraud flags across disputes filed by the same actor or ring.",
+      "grounding": "Friendly fraud/chargeback abuse already costs merchants billions; dispute-narrative text is currently a weak signal precisely because it's short and formulaic, which is exactly what makes it cheap for an LLM to diversify at scale.",
+      "techniques": [
+        "llm_social_engineering",
+        "automation_at_scale"
+      ],
+      "severity": "medium",
+      "likelihood": "high"
+    },
+    {
+      "id": "ato_deepfake_voice_ivr",
+      "name": "Deepfake voice bypass of IVR/call-center voice biometrics",
+      "channel": "account-takeover",
+      "mechanism": "Cloned voice audio (from short public samples: social media, voicemail) is used to pass voice-biometric authentication or to convincingly impersonate the account holder to a human call center agent for password/payment-method resets.",
+      "grounding": "Voice biometric auth is deployed by major banks/card issuers as a call-center authentication factor; voice cloning from seconds of audio is now commodity-available, directly undermining the 'something you are' assumption behind voice biometrics.",
+      "techniques": [
+        "deepfake_audio",
+        "identity_spoofing"
+      ],
+      "severity": "high",
+      "likelihood": "medium"
+    },
+    {
+      "id": "ato_llm_support_pretexting",
+      "name": "LLM-adaptive social engineering of support agents",
+      "channel": "account-takeover",
+      "mechanism": "An operator (or an autonomous agent) uses an LLM to generate and adapt a pretext in real time during a live chat/call with a bank's customer support, answering verification questions plausibly using previously breached/scraped personal data and adjusting the story when challenged, to get a payment method changed or MFA reset.",
+      "grounding": "Human social engineering of support agents is already the root cause of many high-profile ATO incidents; an LLM removes the need for a skilled human operator per attempt, so it scales the attack from a handful of skilled fraudsters to effectively unlimited concurrent attempts.",
+      "techniques": [
+        "llm_social_engineering",
+        "automation_at_scale"
+      ],
+      "severity": "high",
+      "likelihood": "high"
+    },
+    {
+      "id": "ato_sim_swap_orchestration",
+      "name": "LLM-orchestrated SIM-swap social engineering",
+      "channel": "account-takeover",
+      "mechanism": "An LLM-scripted campaign targets telecom support with tailored pretexts (built from OSINT on the victim) to port a victim's number to an attacker-controlled SIM, intercepting SMS-based OTPs used for payment authentication.",
+      "grounding": "SIM swap is a well-documented precursor to payment fraud because SMS OTP is still widely used as a payment step-up factor; the GenAI delta is scaling personalized pretext generation across many simultaneous targets instead of one-off manual attempts.",
+      "techniques": [
+        "llm_social_engineering",
+        "automation_at_scale"
+      ],
+      "severity": "high",
+      "likelihood": "medium"
+    },
+    {
+      "id": "kyc_synthetic_identity_docs",
+      "name": "LLM-generated synthetic identity + consistent backstory",
+      "channel": "kyc-onboarding",
+      "mechanism": "An LLM generates an internally-consistent synthetic identity (name, address history, employment, answers to knowledge-based verification questions) paired with generative-image-model forged ID documents, used to pass onboarding KYC for a new account or credit line with no real underlying person.",
+      "grounding": "Synthetic identity fraud is already the fastest-growing category of identity fraud in card issuance per industry loss reporting; GenAI removes the manual effort of keeping a synthetic identity's details consistent under follow-up questioning.",
+      "techniques": [
+        "synthetic_identity",
+        "identity_document_forgery"
+      ],
+      "severity": "high",
+      "likelihood": "high"
+    },
+    {
+      "id": "kyc_deepfake_video_liveness",
+      "name": "Deepfake bypass of video/liveness KYC checks",
+      "channel": "kyc-onboarding",
+      "mechanism": "Real-time face-swap or fully synthetic video is injected (via virtual camera drivers) into a digital onboarding flow's liveness/selfie-match step, defeating 'blink/turn your head' liveness challenges and photo-ID face matching.",
+      "grounding": "Video KYC and selfie-liveness checks are standard for digital account opening at neobanks and payment apps; virtual-camera deepfake injection attacks against exactly this step have been documented against production liveness vendors.",
+      "techniques": [
+        "deepfake_video",
+        "identity_spoofing"
+      ],
+      "severity": "high",
+      "likelihood": "medium"
+    },
+    {
+      "id": "kyc_fraudulent_merchant_onboarding",
+      "name": "AI-generated fraudulent merchant onboarding documents",
+      "channel": "kyc-onboarding",
+      "mechanism": "Generative models produce plausible business registration certificates, bank statements, and website content to onboard a shell merchant account, which is then used for laundering via fake sales (a card-present or card-not-present 'transaction laundering' front).",
+      "grounding": "Transaction laundering through fraudulently onboarded merchant accounts is a known payment-network risk category (merchant underwriting fraud); GenAI lowers the cost of producing convincing supporting documents and a believable storefront.",
+      "techniques": [
+        "synthetic_identity",
+        "identity_document_forgery"
+      ],
+      "severity": "medium",
+      "likelihood": "medium"
+    },
+    {
+      "id": "agentic_prompt_injection_checkout",
+      "name": "Prompt injection against autonomous shopping/payment agents",
+      "channel": "agentic-commerce",
+      "mechanism": "A malicious merchant page embeds hidden instructions (in page text, alt text, or metadata) that hijack an AI shopping agent's reasoning when it visits the page, causing it to authorize a purchase, change a shipping address, or approve a higher price than the user intended.",
+      "grounding": "As AI agents are given payment-authorization capability (agentic checkout), any content the agent reads becomes an attack surface; prompt injection against tool-using LLM agents is a documented vulnerability class, and payment authorization is one of the highest-value targets for it.",
+      "techniques": [
+        "prompt_injection",
+        "adversarial_ml"
+      ],
+      "severity": "high",
+      "likelihood": "medium"
+    },
+    {
+      "id": "agentic_vendor_agent_manipulation",
+      "name": "Malicious vendor-agent manipulation of buyer-agent negotiation",
+      "channel": "agentic-commerce",
+      "mechanism": "In agent-to-agent commerce (a buying agent negotiating with a selling agent), a malicious selling agent exploits the buying agent's negotiation/comparison logic \u2014 e.g. false scarcity signals, fabricated competitor pricing \u2014 to induce an overpayment or an unauthorized recurring-payment commitment.",
+      "grounding": "Multi-agent commerce protocols are actively being built and piloted by payment networks and AI vendors; game-theoretic manipulation of an automated negotiating counterpart is a predictable extension of known adversarial-ML manipulation techniques into a live payment-decision context.",
+      "techniques": [
+        "prompt_injection",
+        "adversarial_ml"
+      ],
+      "severity": "medium",
+      "likelihood": "low"
+    },
+    {
+      "id": "app_deepfake_executive_vishing",
+      "name": "Real-time deepfake video/voice executive impersonation (CEO fraud)",
+      "channel": "authorized-push-payment",
+      "mechanism": "A live, real-time deepfake video or voice call impersonates a company executive or trusted family member, creating urgency to induce an immediate authorized wire transfer or P2P payment, bypassing the victim's own fraud judgment entirely since the payment is technically 'authorized' by the real account holder.",
+      "grounding": "Real-time deepfake video call fraud against corporate finance staff has already resulted in multi-million-dollar wire fraud losses at real companies; authorized push payment fraud is structurally hard to catch with transaction-side controls alone because the payment is genuinely authorized by the account owner.",
+      "techniques": [
+        "deepfake_video",
+        "deepfake_audio",
+        "llm_social_engineering"
+      ],
+      "severity": "high",
+      "likelihood": "high"
+    },
+    {
+      "id": "app_voice_clone_p2p_scam",
+      "name": "Voice-cloned 'trusted contact' P2P payment scam",
+      "channel": "authorized-push-payment",
+      "mechanism": "A cloned voice of a family member/friend (from short public audio) is used in a phone call claiming an emergency, requesting an urgent P2P payment (e.g. via a mobile payment app) to a new/unfamiliar recipient.",
+      "grounding": "This is the mass-market evolution of the 'grandparent scam', already reported by consumer protection agencies as an active fraud pattern once low-cost voice cloning became available.",
+      "techniques": [
+        "deepfake_audio",
+        "llm_social_engineering"
+      ],
+      "severity": "medium",
+      "likelihood": "high"
+    },
+    {
+      "id": "app_hyperpersonalized_phishing",
+      "name": "LLM hyper-personalized phishing at scale",
+      "channel": "authorized-push-payment",
+      "mechanism": "An LLM ingests scraped social media, breached data, and public records per target to generate individually customized phishing messages (referencing real recent purchases, real contacts, real employer) that drive the victim to authorize a payment or reveal payment credentials, at a cost per message near zero.",
+      "grounding": "Personalization is the single strongest predictor of phishing click-through in security awareness research; what previously required a skilled human writing one message at a time is now fully automatable per-target at scale.",
+      "techniques": [
+        "llm_social_engineering",
+        "automation_at_scale"
+      ],
+      "severity": "high",
+      "likelihood": "high"
+    },
+    {
+      "id": "app_romance_investment_bot",
+      "name": "LLM-driven long-con romance/investment scam chatbot",
+      "channel": "authorized-push-payment",
+      "mechanism": "An LLM conducts a sustained, multi-week conversational relationship (romance or investment-mentor framing) with a victim across many simultaneous targets, building trust before steering toward a fraudulent investment platform or a direct payment request ('pig butchering' style).",
+      "grounding": "Pig-butchering investment scams are already a large, documented cross-border fraud category run by human-staffed scam centers; an LLM replacing the human operator removes the main scaling constraint (labor) on how many victims can be run concurrently.",
+      "techniques": [
+        "llm_social_engineering",
+        "automation_at_scale"
+      ],
+      "severity": "high",
+      "likelihood": "high"
+    },
+    {
+      "id": "mule_synthetic_network_generation",
+      "name": "AI-orchestrated synthetic mule account network",
+      "channel": "mule-network",
+      "mechanism": "Many synthetic identities (see kyc_synthetic_identity_docs) are onboarded as accounts, then an orchestration layer coordinates layered small transfers between them to obscure the path of laundered funds, with transfer amounts/timing generated to resemble organic peer-to-peer payment behavior.",
+      "grounding": "Layering through networks of mule accounts is the standard middle stage of money laundering; the GenAI delta is generating both the identities and behaviorally-realistic transaction patterns that are harder to distinguish from genuine P2P activity than hand-scripted layering.",
+      "techniques": [
+        "synthetic_identity",
+        "adversarial_evasion"
+      ],
+      "severity": "high",
+      "likelihood": "medium"
+    },
+    {
+      "id": "mule_adaptive_layering_vs_aml",
+      "name": "LLM-adaptive layering strategy responding to AML rule feedback",
+      "channel": "mule-network",
+      "mechanism": "An operator uses observed outcomes (which transfer patterns get flagged/frozen vs. clear) as feedback to an LLM-assisted strategy generator, iteratively adjusting transfer size, frequency, and routing to stay under a specific institution's AML thresholds.",
+      "grounding": "This mirrors how real laundering networks empirically probe and adapt to a bank's known thresholds over time; an LLM formalizes and accelerates that adaptation loop instead of relying on slow trial-and-error by a human operator.",
+      "techniques": [
+        "adversarial_evasion",
+        "automation_at_scale"
+      ],
+      "severity": "high",
+      "likelihood": "medium"
+    },
+    {
+      "id": "adv_feature_evasion",
+      "name": "Adversarial feature-space evasion of transaction fraud classifiers",
+      "channel": "ml-defense-attack",
+      "mechanism": "An attacker with query access (direct or via transferability from a similar public model) perturbs transaction features (amount, timing, merchant category sequencing) in the minimal way needed to cross a fraud classifier's decision boundary while keeping the underlying fraudulent transaction's economic intent intact.",
+      "grounding": "Adversarial evasion of tabular fraud classifiers is a documented ML security concern; anywhere a classifier's decisions are observable (approve/decline, or even response latency) provides an attacker signal to probe against.",
+      "techniques": [
+        "adversarial_ml",
+        "adversarial_evasion"
+      ],
+      "severity": "medium",
+      "likelihood": "medium"
+    },
+    {
+      "id": "adv_model_extraction_probing",
+      "name": "Model extraction / decision-boundary probing via test transactions",
+      "channel": "ml-defense-attack",
+      "mechanism": "An attacker submits many small, deliberately varied test transactions to reverse-engineer which feature combinations a bank's fraud model treats as risky, building a surrogate model used to design future evasive transactions offline.",
+      "grounding": "Model extraction attacks against ML-as-a-service and fraud/risk scoring APIs are an established research area; a payment network's real-time approve/decline signal is exactly the kind of oracle access such attacks rely on.",
+      "techniques": [
+        "adversarial_ml",
+        "automation_at_scale"
+      ],
+      "severity": "medium",
+      "likelihood": "low"
+    },
+    {
+      "id": "adv_feedback_loop_poisoning",
+      "name": "Poisoning a fraud model's retraining feedback loop",
+      "channel": "ml-defense-attack",
+      "mechanism": "An attacker files disputes/chargebacks or manually 'confirms legitimate' fraudulent transactions to skew the labels a bank's fraud model retrains on, gradually shifting the model's decision boundary to be more permissive toward the attacker's future transaction patterns.",
+      "grounding": "Any ML system that retrains on operator/customer-supplied feedback (dispute outcomes, confirmed-fraud labels) is structurally exposed to label poisoning; this is a direct risk for the very kind of feedback loop this project's own Defend pillar relies on, which is worth stating plainly rather than glossing over.",
+      "techniques": [
+        "adversarial_ml",
+        "adversarial_evasion"
+      ],
+      "severity": "high",
+      "likelihood": "low"
+    },
+    {
+      "id": "cross_fake_support_chatbot",
+      "name": "GenAI-impersonated fake bank support chatbot",
+      "channel": "cross-cutting",
+      "mechanism": "A convincingly branded fake chatbot (via a phishing link or malicious ad) impersonates a bank's real AI support assistant, using an LLM to hold a plausible support conversation while harvesting payment credentials or authorizing a fraudulent 'refund' transfer.",
+      "grounding": "As real banks roll out AI support assistants, users are being trained to trust conversational bots for account actions, which directly lowers the suspicion bar for a convincing fake one \u2014 a second-order risk created by legitimate GenAI adoption itself.",
+      "techniques": [
+        "llm_social_engineering",
+        "identity_spoofing"
+      ],
+      "severity": "medium",
+      "likelihood": "medium"
+    },
+    {
+      "id": "cross_fake_cashback_bot",
+      "name": "Fake AI 'refund/cashback' bot payment-authorization trick",
+      "channel": "cross-cutting",
+      "mechanism": "A bot impersonating a merchant or payment app's automated refund assistant walks a victim through steps that actually authorize an outbound payment or a bill-pay setup, framed misleadingly as receiving money rather than sending it.",
+      "grounding": "Refund-scam social engineering already exists with human operators (typically over phone/remote-access-tool combos); an LLM-driven bot version scales the exact same trick to chat/SMS channels with no human labor per victim.",
+      "techniques": [
+        "llm_social_engineering",
+        "identity_spoofing"
+      ],
+      "severity": "medium",
+      "likelihood": "medium"
+    }
+  ],
+  "edges": [
+    {
+      "source": "cnp_ai_card_testing",
+      "target": "adv_model_extraction_probing",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "cnp_ai_card_testing",
+      "target": "app_hyperpersonalized_phishing",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "cnp_ai_card_testing",
+      "target": "app_romance_investment_bot",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "cnp_ai_card_testing",
+      "target": "ato_llm_support_pretexting",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "cnp_ai_card_testing",
+      "target": "ato_sim_swap_orchestration",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "cnp_ai_card_testing",
+      "target": "cnp_llm_dispute_narratives",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "cnp_ai_card_testing",
+      "target": "mule_adaptive_layering_vs_aml",
+      "shared_techniques": [
+        "automation_at_scale",
+        "adversarial_evasion"
+      ]
+    },
+    {
+      "source": "cnp_ai_card_testing",
+      "target": "adv_feature_evasion",
+      "shared_techniques": [
+        "adversarial_evasion"
+      ]
+    },
+    {
+      "source": "cnp_ai_card_testing",
+      "target": "adv_feedback_loop_poisoning",
+      "shared_techniques": [
+        "adversarial_evasion"
+      ]
+    },
+    {
+      "source": "cnp_ai_card_testing",
+      "target": "mule_synthetic_network_generation",
+      "shared_techniques": [
+        "adversarial_evasion"
+      ]
+    },
+    {
+      "source": "cnp_llm_dispute_narratives",
+      "target": "adv_model_extraction_probing",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "cnp_llm_dispute_narratives",
+      "target": "app_hyperpersonalized_phishing",
+      "shared_techniques": [
+        "automation_at_scale",
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "cnp_llm_dispute_narratives",
+      "target": "app_romance_investment_bot",
+      "shared_techniques": [
+        "automation_at_scale",
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "cnp_llm_dispute_narratives",
+      "target": "ato_llm_support_pretexting",
+      "shared_techniques": [
+        "automation_at_scale",
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "cnp_llm_dispute_narratives",
+      "target": "ato_sim_swap_orchestration",
+      "shared_techniques": [
+        "automation_at_scale",
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "cnp_llm_dispute_narratives",
+      "target": "mule_adaptive_layering_vs_aml",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "cnp_llm_dispute_narratives",
+      "target": "app_deepfake_executive_vishing",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "cnp_llm_dispute_narratives",
+      "target": "app_voice_clone_p2p_scam",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "cnp_llm_dispute_narratives",
+      "target": "cross_fake_cashback_bot",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "cnp_llm_dispute_narratives",
+      "target": "cross_fake_support_chatbot",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "ato_deepfake_voice_ivr",
+      "target": "app_deepfake_executive_vishing",
+      "shared_techniques": [
+        "deepfake_audio"
+      ]
+    },
+    {
+      "source": "ato_deepfake_voice_ivr",
+      "target": "app_voice_clone_p2p_scam",
+      "shared_techniques": [
+        "deepfake_audio"
+      ]
+    },
+    {
+      "source": "ato_deepfake_voice_ivr",
+      "target": "cross_fake_cashback_bot",
+      "shared_techniques": [
+        "identity_spoofing"
+      ]
+    },
+    {
+      "source": "ato_deepfake_voice_ivr",
+      "target": "cross_fake_support_chatbot",
+      "shared_techniques": [
+        "identity_spoofing"
+      ]
+    },
+    {
+      "source": "ato_deepfake_voice_ivr",
+      "target": "kyc_deepfake_video_liveness",
+      "shared_techniques": [
+        "identity_spoofing"
+      ]
+    },
+    {
+      "source": "ato_llm_support_pretexting",
+      "target": "adv_model_extraction_probing",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "ato_llm_support_pretexting",
+      "target": "app_hyperpersonalized_phishing",
+      "shared_techniques": [
+        "automation_at_scale",
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "ato_llm_support_pretexting",
+      "target": "app_romance_investment_bot",
+      "shared_techniques": [
+        "automation_at_scale",
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "ato_llm_support_pretexting",
+      "target": "ato_sim_swap_orchestration",
+      "shared_techniques": [
+        "automation_at_scale",
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "ato_llm_support_pretexting",
+      "target": "mule_adaptive_layering_vs_aml",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "ato_llm_support_pretexting",
+      "target": "app_deepfake_executive_vishing",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "ato_llm_support_pretexting",
+      "target": "app_voice_clone_p2p_scam",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "ato_llm_support_pretexting",
+      "target": "cross_fake_cashback_bot",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "ato_llm_support_pretexting",
+      "target": "cross_fake_support_chatbot",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "ato_sim_swap_orchestration",
+      "target": "adv_model_extraction_probing",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "ato_sim_swap_orchestration",
+      "target": "app_hyperpersonalized_phishing",
+      "shared_techniques": [
+        "automation_at_scale",
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "ato_sim_swap_orchestration",
+      "target": "app_romance_investment_bot",
+      "shared_techniques": [
+        "automation_at_scale",
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "ato_sim_swap_orchestration",
+      "target": "mule_adaptive_layering_vs_aml",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "ato_sim_swap_orchestration",
+      "target": "app_deepfake_executive_vishing",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "ato_sim_swap_orchestration",
+      "target": "app_voice_clone_p2p_scam",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "ato_sim_swap_orchestration",
+      "target": "cross_fake_cashback_bot",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "ato_sim_swap_orchestration",
+      "target": "cross_fake_support_chatbot",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "kyc_synthetic_identity_docs",
+      "target": "kyc_fraudulent_merchant_onboarding",
+      "shared_techniques": [
+        "synthetic_identity",
+        "identity_document_forgery"
+      ]
+    },
+    {
+      "source": "kyc_synthetic_identity_docs",
+      "target": "mule_synthetic_network_generation",
+      "shared_techniques": [
+        "synthetic_identity"
+      ]
+    },
+    {
+      "source": "kyc_deepfake_video_liveness",
+      "target": "cross_fake_cashback_bot",
+      "shared_techniques": [
+        "identity_spoofing"
+      ]
+    },
+    {
+      "source": "kyc_deepfake_video_liveness",
+      "target": "cross_fake_support_chatbot",
+      "shared_techniques": [
+        "identity_spoofing"
+      ]
+    },
+    {
+      "source": "kyc_deepfake_video_liveness",
+      "target": "app_deepfake_executive_vishing",
+      "shared_techniques": [
+        "deepfake_video"
+      ]
+    },
+    {
+      "source": "kyc_fraudulent_merchant_onboarding",
+      "target": "mule_synthetic_network_generation",
+      "shared_techniques": [
+        "synthetic_identity"
+      ]
+    },
+    {
+      "source": "agentic_prompt_injection_checkout",
+      "target": "agentic_vendor_agent_manipulation",
+      "shared_techniques": [
+        "prompt_injection",
+        "adversarial_ml"
+      ]
+    },
+    {
+      "source": "agentic_prompt_injection_checkout",
+      "target": "adv_feature_evasion",
+      "shared_techniques": [
+        "adversarial_ml"
+      ]
+    },
+    {
+      "source": "agentic_prompt_injection_checkout",
+      "target": "adv_feedback_loop_poisoning",
+      "shared_techniques": [
+        "adversarial_ml"
+      ]
+    },
+    {
+      "source": "agentic_prompt_injection_checkout",
+      "target": "adv_model_extraction_probing",
+      "shared_techniques": [
+        "adversarial_ml"
+      ]
+    },
+    {
+      "source": "agentic_vendor_agent_manipulation",
+      "target": "adv_feature_evasion",
+      "shared_techniques": [
+        "adversarial_ml"
+      ]
+    },
+    {
+      "source": "agentic_vendor_agent_manipulation",
+      "target": "adv_feedback_loop_poisoning",
+      "shared_techniques": [
+        "adversarial_ml"
+      ]
+    },
+    {
+      "source": "agentic_vendor_agent_manipulation",
+      "target": "adv_model_extraction_probing",
+      "shared_techniques": [
+        "adversarial_ml"
+      ]
+    },
+    {
+      "source": "app_deepfake_executive_vishing",
+      "target": "app_hyperpersonalized_phishing",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "app_deepfake_executive_vishing",
+      "target": "app_romance_investment_bot",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "app_deepfake_executive_vishing",
+      "target": "app_voice_clone_p2p_scam",
+      "shared_techniques": [
+        "llm_social_engineering",
+        "deepfake_audio"
+      ]
+    },
+    {
+      "source": "app_deepfake_executive_vishing",
+      "target": "cross_fake_cashback_bot",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "app_deepfake_executive_vishing",
+      "target": "cross_fake_support_chatbot",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "app_voice_clone_p2p_scam",
+      "target": "app_hyperpersonalized_phishing",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "app_voice_clone_p2p_scam",
+      "target": "app_romance_investment_bot",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "app_voice_clone_p2p_scam",
+      "target": "cross_fake_cashback_bot",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "app_voice_clone_p2p_scam",
+      "target": "cross_fake_support_chatbot",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "app_hyperpersonalized_phishing",
+      "target": "adv_model_extraction_probing",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "app_hyperpersonalized_phishing",
+      "target": "app_romance_investment_bot",
+      "shared_techniques": [
+        "automation_at_scale",
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "app_hyperpersonalized_phishing",
+      "target": "mule_adaptive_layering_vs_aml",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "app_hyperpersonalized_phishing",
+      "target": "cross_fake_cashback_bot",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "app_hyperpersonalized_phishing",
+      "target": "cross_fake_support_chatbot",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "app_romance_investment_bot",
+      "target": "adv_model_extraction_probing",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "app_romance_investment_bot",
+      "target": "mule_adaptive_layering_vs_aml",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "app_romance_investment_bot",
+      "target": "cross_fake_cashback_bot",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "app_romance_investment_bot",
+      "target": "cross_fake_support_chatbot",
+      "shared_techniques": [
+        "llm_social_engineering"
+      ]
+    },
+    {
+      "source": "mule_synthetic_network_generation",
+      "target": "adv_feature_evasion",
+      "shared_techniques": [
+        "adversarial_evasion"
+      ]
+    },
+    {
+      "source": "mule_synthetic_network_generation",
+      "target": "adv_feedback_loop_poisoning",
+      "shared_techniques": [
+        "adversarial_evasion"
+      ]
+    },
+    {
+      "source": "mule_synthetic_network_generation",
+      "target": "mule_adaptive_layering_vs_aml",
+      "shared_techniques": [
+        "adversarial_evasion"
+      ]
+    },
+    {
+      "source": "mule_adaptive_layering_vs_aml",
+      "target": "adv_model_extraction_probing",
+      "shared_techniques": [
+        "automation_at_scale"
+      ]
+    },
+    {
+      "source": "mule_adaptive_layering_vs_aml",
+      "target": "adv_feature_evasion",
+      "shared_techniques": [
+        "adversarial_evasion"
+      ]
+    },
+    {
+      "source": "mule_adaptive_layering_vs_aml",
+      "target": "adv_feedback_loop_poisoning",
+      "shared_techniques": [
+        "adversarial_evasion"
+      ]
+    },
+    {
+      "source": "adv_feature_evasion",
+      "target": "adv_feedback_loop_poisoning",
+      "shared_techniques": [
+        "adversarial_evasion",
+        "adversarial_ml"
+      ]
+    },
+    {
+      "source": "adv_feature_evasion",
+      "target": "adv_model_extraction_probing",
+      "shared_techniques": [
+        "adversarial_ml"
+      ]
+    },
+    {
+      "source": "adv_model_extraction_probing",
+      "target": "adv_feedback_loop_poisoning",
+      "shared_techniques": [
+        "adversarial_ml"
+      ]
+    },
+    {
+      "source": "cross_fake_support_chatbot",
+      "target": "cross_fake_cashback_bot",
+      "shared_techniques": [
+        "llm_social_engineering",
+        "identity_spoofing"
+      ]
+    }
+  ],
+  "technique_descriptions": {
+    "deepfake_audio": "Synthetic/cloned voice audio used for authentication bypass or impersonation.",
+    "deepfake_video": "Synthetic/face-swapped video used for liveness bypass or impersonation.",
+    "llm_social_engineering": "LLM-generated or LLM-adapted persuasive text/conversation.",
+    "synthetic_identity": "Fabricated, internally-consistent identity used to pass verification.",
+    "identity_document_forgery": "Generative-model-forged supporting documents (ID, business docs).",
+    "identity_spoofing": "Impersonating a specific real entity (person or brand) rather than fabricating a new one.",
+    "prompt_injection": "Malicious content designed to hijack an LLM agent's instructions/reasoning.",
+    "adversarial_ml": "Techniques targeting the ML model itself (evasion, extraction, poisoning).",
+    "adversarial_evasion": "Adapting attacker behavior specifically to evade a known or inferred detection rule/threshold.",
+    "automation_at_scale": "Removing human-labor constraints to run many concurrent attack instances."
+  }
+}
