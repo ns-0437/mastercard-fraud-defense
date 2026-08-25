@@ -10,14 +10,24 @@ See [CLAUDE.md](CLAUDE.md) for architecture/constraints, [docs/PHASES.md](docs/P
 for the build plan, [SKILL.md](SKILL.md) for how to run each piece.
 
 ## Status
-Phases 0-5 built, gate-checked, and deployed (see docs/PHASES.md for the full record,
-including an earlier FAIL on one small-sample regression in Phase 4 that was kept in
-the log rather than deleted once it was superseded). Remaining: Phase 6 (.docx
-walkthrough), Phase 7 (bulletproofing pass), Phase 8 (submission).
+Phases 0-7 built, gate-checked, and deployed (see docs/PHASES.md for the full record,
+including results kept in the log rather than deleted once superseded, and the Phase 7
+adversarial self-test finding that 4 of 5 hand-crafted evasion attempts succeeded).
+Remaining: Phase 8 (submission).
 
-**Live demo**: https://mastercard-frontend-612620013489.us-central1.run.app
-(backend: https://mastercard-backend-612620013489.us-central1.run.app) — both on GCP
-Cloud Run, project `mastercard-fraud-defense`.
+**Live demo**: https://aidefenselab-frontend-gwezm4pj4a-uc.a.run.app
+(backend: https://aidefenselab-backend-gwezm4pj4a-uc.a.run.app) — both on GCP Cloud
+Run, project `mastercard-fraud-defense`.
+
+Cloud Run gives every service two URL formats (`<service>-<hash>.<region>.run.app` and
+`<service>-<hash>-<region-code>.a.run.app`, e.g. `-uc` for us-central1). Some ISP DNS
+resolvers in India (confirmed: Reliance Jio) refuse to resolve the first format's
+`<region>.run.app` zone specifically — apparently a deliberate anti-abuse policy
+against Cloud Run's newer regional domains — while the older `.a.run.app` format
+resolves fine. The link above uses the `.a.run.app` form for that reason; if a judge's
+network still can't reach it, that's a network-side DNS policy, not a broken
+deployment — confirmed by reproducing it, testing four other major hosting providers'
+domains on the same network (all resolved fine), and narrowing it to this exact zone.
 
 **Repo**: https://github.com/ns-0437/mastercard-fraud-defense
 

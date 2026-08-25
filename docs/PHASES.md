@@ -134,11 +134,25 @@ do not skip gates.
 - **Actual deployment (Aug 25)**: switched to GCP Cloud Run per direction, not
   Vercel/Render — two Docker-containerized services (FastAPI backend, static React
   frontend via nginx) in a dedicated new GCP project (`mastercard-fraud-defense`), not
-  reusing an existing project, to keep billing/resources isolated. Verified end-to-end
-  via curl (the in-app Browser pane couldn't reach the newly-created domains, likely a
-  policy restriction on unclassified domains — not an actual deployment problem, since
-  curl with explicit DNS resolution confirmed every endpoint works correctly). Live
-  URLs are in README.md's Status section.
+  reusing an existing project, to keep billing/resources isolated.
+- **Real DNS finding, not a browser-tool quirk**: the user's own browser also failed to
+  reach the initial URLs (`DNS_PROBE_FINISHED_NXDOMAIN`) -- confirmed via their real
+  Chrome, not just the in-app Browser pane. Root-caused by testing systematically:
+  their ISP resolver (Reliance Jio) refused queries for Cloud Run's `<region>.run.app`
+  domain zone specifically (e.g. `us-central1.run.app`) -- even an unrelated, older,
+  previously-working Cloud Run service on a DIFFERENT GCP project failed the same way,
+  ruling out anything about this specific deployment, project, or account. Four other
+  major hosting providers' domains (github.io, onrender.com, up.railway.app, web.app)
+  all resolved fine on the same network, narrowing the block to Cloud Run's domain
+  specifically. Fix: every Cloud Run service actually exposes TWO URL formats
+  simultaneously -- the newer `<service>-<hash>.<region>.run.app` and the older
+  `<service>-<hash>-<region-code>.a.run.app` (e.g. `-uc` for us-central1) -- and only
+  the newer one was being blocked. Switched to the `.a.run.app` URLs (no redeployment
+  needed, just a frontend rebuild pointing at the backend's `.a.run.app` address) and
+  verified working end-to-end via the user's real browser. Old services deleted to
+  avoid anyone landing on the blocked URLs. Live URLs are in README.md's Status
+  section, along with this explanation so a judge hitting the same ISP issue
+  understands it's not a broken deployment.
 
 ## Phase 6 — Solution walkthrough (.docx)
 - Sections: attack landscape (pull straight from the taxonomy graph, don't
