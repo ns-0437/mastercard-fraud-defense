@@ -22,6 +22,9 @@ FIDELITY_PATH = REPO_ROOT / "generate" / "fidelity_report.json"
 EVAL_PATH = REPO_ROOT / "defend" / "artifacts" / "evaluation_report.json"
 ULB_PATH = REPO_ROOT / "defend" / "artifacts" / "ulb_baseline_report.json"
 CYCLE_PATH = REPO_ROOT / "orchestrator" / "cycle_report.json"
+ADVERSARIAL_PATH = REPO_ROOT / "defend" / "artifacts" / "adversarial_selftest_report.json"
+CONFIGS_USED_PATH = REPO_ROOT / "generate" / "attack_configs_used.json"
+FEATURE_IMPORTANCE_PATH = REPO_ROOT / "defend" / "artifacts" / "feature_importance.json"
 SYNTHETIC_DIR = REPO_ROOT / "data" / "synthetic"
 # A small pre-extracted sample of real legit PaySim rows, NOT the full 493MB raw file --
 # the deployed container doesn't ship the full backbone dataset, only what the API
@@ -77,6 +80,21 @@ def cycles():
         "primary_evaluation": _read_json(EVAL_PATH),
         "ulb_baseline": _read_json(ULB_PATH),
         "closed_loop": _read_json(CYCLE_PATH),
+        "adversarial_selftest": _read_json(ADVERSARIAL_PATH),
+    }
+
+
+@app.get("/api/generate")
+def generate_pillar():
+    """Everything that demonstrates the Generate pillar's actual output: which LLM
+    provider produced each attack family's config and what it said, plus the fidelity
+    validation results that gate whether that output was trustworthy enough to train
+    on. Both already exist as artifacts (attack_configs_used.json, fidelity_report.json)
+    -- this just serves them together for the web app's Generate & Fidelity tab."""
+    return {
+        "configs_used": _read_json(CONFIGS_USED_PATH),
+        "fidelity": _read_json(FIDELITY_PATH),
+        "feature_importance": _read_json(FEATURE_IMPORTANCE_PATH),
     }
 
 
