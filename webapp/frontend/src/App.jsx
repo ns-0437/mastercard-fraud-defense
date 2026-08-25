@@ -1,16 +1,20 @@
 import { useState } from 'react'
+import Overview from './components/Overview.jsx'
 import TaxonomyGraph from './components/TaxonomyGraph.jsx'
+import GenerateFidelity from './components/GenerateFidelity.jsx'
 import LiveDetection from './components/LiveDetection.jsx'
 import ClosedLoopResults from './components/ClosedLoopResults.jsx'
 
 const TABS = [
+  { id: 'overview', label: 'Overview' },
   { id: 'taxonomy', label: 'Attack Taxonomy' },
+  { id: 'generate', label: 'Generate & Fidelity' },
   { id: 'detect', label: 'Live Detection' },
   { id: 'loop', label: 'Closed-Loop Results' },
 ]
 
 export default function App() {
-  const [tab, setTab] = useState('taxonomy')
+  const [tab, setTab] = useState('overview')
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
@@ -38,7 +42,9 @@ export default function App() {
       </nav>
 
       <main className="p-6">
+        {tab === 'overview' && <Overview onNavigate={setTab} />}
         {tab === 'taxonomy' && <TaxonomyGraph />}
+        {tab === 'generate' && <GenerateFidelity />}
         {tab === 'detect' && <LiveDetection />}
         {tab === 'loop' && <ClosedLoopResults />}
       </main>
