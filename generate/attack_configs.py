@@ -94,10 +94,16 @@ DEFAULT_CONFIGS: dict[str, AttackConfig] = {
         attack_family="structuring_smurfing",
         taxonomy_ref="mule_adaptive_layering_vs_aml",
         n_instances=600,
-        amount=AmountDistParams(distribution="uniform", low=0.70, high=0.97),  # fraction of threshold
+        # Widened from 0.70-0.97 after the adversarial self-test found a ~40%-of-
+        # threshold variant evaded detection entirely -- structuring at a more
+        # cautious fraction (sacrificing per-transaction efficiency for lower
+        # suspicion) is a real operator choice, not an edge case. Training only on
+        # the "textbook" near-threshold shape taught that specific range, not
+        # "structuring" as a general behavior.
+        amount=AmountDistParams(distribution="uniform", low=0.30, high=0.97),  # fraction of threshold
         timing=TimingParams(burst_window_steps=48, inter_event_jitter=0.5),
         graph=GraphParams(n_accounts=1, hops=1, fanout=3),
-        notes="Many transfers at 70-97% of a $10,000-equivalent reporting threshold, "
+        notes="Many transfers at 30-97% of a $10,000-equivalent reporting threshold, "
               "spread over ~48 steps to avoid naive velocity windows.",
     ),
     "mule_network_layering": AttackConfig(
@@ -119,5 +125,22 @@ DEFAULT_CONFIGS: dict[str, AttackConfig] = {
         graph=GraphParams(n_accounts=1, hops=1, fanout=20),
         notes="One origin probing 20+ distinct destinations with $1-5 payments within "
               "a single time step, adaptive-looking but not literally adaptive in v1.",
+    ),
+    "ato_lowandslow_exfiltration": AttackConfig(
+        # Added after the adversarial self-test found this exact shape (recurring
+        # similar-amount payments, no drain/burst signature) evaded a detector trained
+        # only on ato_rapid_drain's fast-drain and structuring_smurfing's near-
+        # threshold shapes. Same real-world vector as ato_rapid_drain (account
+        # takeover), a genuinely different exfiltration pattern -- see
+        # simulate_ato_lowandslow's docstring.
+        attack_family="ato_lowandslow_exfiltration",
+        taxonomy_ref="ato_llm_support_pretexting",
+        n_instances=300,
+        amount=AmountDistParams(distribution="lognormal", mean_log=7.5, sigma_log=0.6),
+        timing=TimingParams(burst_window_steps=200, inter_event_jitter=0.3),
+        graph=GraphParams(n_accounts=1, hops=1, fanout=1),
+        notes="4-7 similar-amount payments to one destination, spaced ~15-40 steps "
+              "apart, mimicking legitimate recurring bill-pay instead of draining the "
+              "account quickly.",
     ),
 }

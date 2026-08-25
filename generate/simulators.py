@@ -80,7 +80,13 @@ def simulate_ato_rapid_drain(config: AttackConfig, backbone: pd.DataFrame, rng: 
     rows = []
     steps = _sample_steps(backbone, n, config.timing.burst_window_steps, rng)
     starting_balance = rng.lognormal(mean=config.amount.mean_log + 0.3, sigma=config.amount.sigma_log, size=n)
-    drain_fraction = rng.uniform(0.85, 0.98, size=n)
+    # Widened from a fixed 0.85-0.98 after the adversarial self-test found a 40%-drain
+    # variant evaded the detector entirely -- that's a real, plausible operator choice
+    # (drain less to stay under the radar), not an edge case to exclude. Training only
+    # on the "textbook" aggressive-drain shape taught the model that fraction range
+    # specifically, rather than "account takeover drain" as a general behavior. Widening
+    # the family's own definition, not adding a special case for one held-out test.
+    drain_fraction = rng.uniform(0.20, 0.98, size=n)
     real_pool = _real_account_pool(backbone) if config.warm_up else None
 
     for i in range(n):
@@ -90,7 +96,9 @@ def simulate_ato_rapid_drain(config: AttackConfig, backbone: pd.DataFrame, rng: 
             rows.append(_warmup_row(orig, real_pool, rng, int(steps[i])))
         bal = starting_balance[i]
         drain_amt = bal * drain_fraction[i]
-        n_stages = rng.integers(2, 4)
+        # Single-stage (n_stages=1) now possible, not just 2-3 -- a low-fraction drain
+        # is often executed in one transfer, not staged, in real ATO incidents.
+        n_stages = rng.integers(1, 4)
         stage_amts = np.sort(rng.dirichlet(np.ones(n_stages)) * drain_amt)[::-1]
         cur_bal = bal
         for s, amt in enumerate(stage_amts):
@@ -157,9 +165,20 @@ def simulate_mule_network(config: AttackConfig, backbone: pd.DataFrame, rng: np.
     rows = []
     real_pool = _real_account_pool(backbone) if config.warm_up else None
     for net_i in range(n_networks):
-        accounts = [_new_account_id(f"MULE{net_i}", i) for i in range(config.graph.n_accounts)]
+        # Per-network randomized topology and amount, not one fixed shape repeated
+        # n_networks times -- added after the adversarial self-test found a small
+        # (2-hop, real-median-amount) mule network evaded a detector trained only on
+        # the LLM-chosen fixed n_accounts/hops/amount-scale. A real mule-ring operator
+        # varies network size and doesn't only move amounts far from the population
+        # median; training on one repeated topology taught that specific shape, not
+        # "mule layering" as a general behavior.
+        net_n_accounts = int(rng.integers(2, max(3, config.graph.n_accounts) + 1))
+        net_hops = int(rng.integers(1, max(2, config.graph.hops) + 1))
+        net_mean_log = float(rng.uniform(config.amount.mean_log - 2.0, config.amount.mean_log + 0.5))
+
+        accounts = [_new_account_id(f"MULE{net_i}", i) for i in range(net_n_accounts)]
         sink = _new_account_id(f"MULESINK{net_i}", 0)
-        entry_amount = float(rng.lognormal(mean=config.amount.mean_log, sigma=config.amount.sigma_log))
+        entry_amount = float(rng.lognormal(mean=net_mean_log, sigma=config.amount.sigma_log))
         step = int(_sample_steps(backbone, 1, config.timing.burst_window_steps, rng)[0])
 
         if config.warm_up:
@@ -172,7 +191,7 @@ def simulate_mule_network(config: AttackConfig, backbone: pd.DataFrame, rng: np.
         cur_amount = entry_amount
         prev_account = accounts[0]
         # entry hop: assume funds first land in accounts[0] from an untracked external source
-        for hop in range(config.graph.hops):
+        for hop in range(net_hops):
             next_account = accounts[(hop + 1) % len(accounts)] if hop + 1 < len(accounts) else sink
             skim = rng.uniform(0.02, 0.08)  # simulated fee/skim per hop
             out_amount = cur_amount * (1 - skim)
@@ -188,11 +207,60 @@ def simulate_mule_network(config: AttackConfig, backbone: pd.DataFrame, rng: np.
 
         # cash-out at sink
         rows.append({
-            "step": step + config.graph.hops, "type": "CASH_OUT", "amount": round(float(cur_amount), 2),
+            "step": step + net_hops, "type": "CASH_OUT", "amount": round(float(cur_amount), 2),
             "nameOrig": sink, "oldbalanceOrg": round(float(cur_amount), 2), "newbalanceOrig": 0.0,
             "nameDest": _new_account_id(f"MERCHANT{net_i}", 0), "oldbalanceDest": 0.0,
             "newbalanceDest": round(float(cur_amount), 2), "isFraud": 1, "isFlaggedFraud": 0,
         })
+
+    df = pd.DataFrame(rows, columns=PAYSIM_COLUMNS)
+    df["attack_family"] = config.attack_family
+    df["is_synthetic"] = 1
+    return df
+
+
+def simulate_ato_lowandslow(config: AttackConfig, backbone: pd.DataFrame, rng: np.random.Generator) -> pd.DataFrame:
+    """A genuinely new attack shape, added after the adversarial self-test found that
+    an ATO operator mimicking recurring bill-pay (similar amounts, one destination, no
+    drain/burst/threshold signature at all) evaded a detector trained only on the
+    "rapid drain" and "structuring" shapes -- a real evasion, not covered by widening
+    either existing family's parameters, since this pattern has no fraction-of-balance
+    or fraction-of-threshold signature to widen. Same real-world vector as
+    ato_rapid_drain (a takeover of the account), different EXFILTRATION shape: instead
+    of draining most of the balance quickly, the attacker moves small, similar,
+    unremarkable amounts to one destination at a slow, roughly regular cadence --
+    trading speed for looking routine.
+    """
+    n = config.n_instances
+    rows = []
+    real_pool = _real_account_pool(backbone) if config.warm_up else None
+    for i in range(n):
+        orig = _new_account_id("ATOLS", i)
+        dest = _new_account_id("ATOLSSINK", i)
+        n_payments = int(rng.integers(4, 8))
+        base_amount = float(rng.lognormal(mean=config.amount.mean_log - 2.0, sigma=0.3))
+        cadence = int(rng.integers(15, 40))  # steps between payments -- "roughly regular"
+        first_step = int(_sample_steps(backbone, 1, config.timing.burst_window_steps, rng)[0])
+        bal = float(rng.lognormal(mean=config.amount.mean_log + 1.0, sigma=config.amount.sigma_log))
+
+        if config.warm_up:
+            rows.append(_warmup_row(orig, real_pool, rng, first_step))
+
+        cur_bal = bal
+        for p in range(n_payments):
+            # amounts stay close to each other (low variance) -- that's what makes
+            # this look routine rather than an escalating or erratic drain.
+            amt = round(float(base_amount * rng.uniform(0.9, 1.1)), 2)
+            new_bal = max(0.0, cur_bal - amt)
+            step = first_step + p * cadence + int(rng.integers(-2, 3))
+            rows.append({
+                "step": max(1, step), "type": "PAYMENT", "amount": amt,
+                "nameOrig": orig, "oldbalanceOrg": round(cur_bal, 2),
+                "newbalanceOrig": round(new_bal, 2), "nameDest": dest,
+                "oldbalanceDest": 0.0, "newbalanceDest": amt,
+                "isFraud": 1, "isFlaggedFraud": 0,
+            })
+            cur_bal = new_bal
 
     df = pd.DataFrame(rows, columns=PAYSIM_COLUMNS)
     df["attack_family"] = config.attack_family
@@ -244,4 +312,5 @@ SIMULATORS = {
     "structuring_smurfing": simulate_structuring,
     "mule_network_layering": simulate_mule_network,
     "card_testing_burst": simulate_card_testing_burst,
+    "ato_lowandslow_exfiltration": simulate_ato_lowandslow,
 }

@@ -12,7 +12,7 @@
   },
   "structuring_smurfing": {
     "provider": "hand-authored-fallback",
-    "reasoning": "Many transfers at 70-97% of a $10,000-equivalent reporting threshold, spread over ~48 steps to avoid naive velocity windows.",
+    "reasoning": "Many transfers at 30-97% of a $10,000-equivalent reporting threshold, spread over ~48 steps to avoid naive velocity windows.",
     "n_instances": 600,
     "amount_distribution": "uniform",
     "burst_window_steps": 48,
@@ -42,5 +42,16 @@
     "hops": 1,
     "fanout": 20,
     "taxonomy_ref": "cnp_ai_card_testing"
+  },
+  "ato_lowandslow_exfiltration": {
+    "provider": "hand-authored-fallback",
+    "reasoning": "4-7 similar-amount payments to one destination, spaced ~15-40 steps apart, mimicking legitimate recurring bill-pay instead of draining the account quickly.",
+    "n_instances": 300,
+    "amount_distribution": "lognormal",
+    "burst_window_steps": 200,
+    "n_accounts": 1,
+    "hops": 1,
+    "fanout": 1,
+    "taxonomy_ref": "ato_llm_support_pretexting"
   }
 }
