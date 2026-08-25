@@ -55,6 +55,14 @@ npm --prefix webapp/frontend run dev           # frontend, http://localhost:5173
 Run order matters: each phase reads artifacts the previous one wrote (taxonomy graph ->
 synthetic attacks -> processed features -> trained model -> graph snapshot -> web API).
 
+**Reproducing without any LLM API key**: everything above runs and every gate still
+mostly passes, but Phase 4's regression-check gate reproduces the FAIL documented in
+docs/PHASES.md (the mule_network_layering regression), not the later PASS — the
+hand-authored fallback configs and the Gemini-generated configs aren't numerically
+identical, so exact figures shift slightly. The qualitative finding (cycle-1 detector
+is nearly blind to hardened card-testing; retraining recovers it) reproduces either way
+— confirmed by re-running this exact fresh-clone test during Phase 7 bulletproofing.
+
 ## Datasets
 - **PaySim** (primary backbone): https://www.kaggle.com/datasets/ealaxi/paysim1
 - **Credit Card Fraud Detection (ULB)** (generalization holdout):
