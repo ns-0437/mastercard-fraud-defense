@@ -108,8 +108,21 @@ CASES.append(build_case(
 
 
 def main():
+    # CRITICAL BUG, found and fixed here: this loaded detector_cycle2.json for the
+    # entire session up to this point. detector_cycle2.json is calibrated to the
+    # closed loop's v1+v2 COMBINED graph (see train_anomaly_detector.py's docstring
+    # for the full incident where this exact mismatch was first caught) -- scoring it
+    # against features computed from a freshly-built, differently-composed graph here
+    # produces silently wrong predictions on structurally-identical inputs. Direct
+    # proof: a training row with amount_to_orig_balance_ratio=0.41 (same shape as the
+    # adv_low_fraction_drain case below, ratio=0.40) scores 0.9997 fraud probability
+    # from detector.json, while the near-identical adversarial case scored 0.0001 from
+    # detector_cycle2.json -- not a real generalization gap, a model/graph-context
+    # mismatch. detector.json (cycle-1) is the model actually consistent with this
+    # script's feature-computation approach and the one documented everywhere else in
+    # this project (PR-AUC, per-family recall, etc.) -- use it, not cycle-2.
     model = xgb.XGBClassifier()
-    model.load_model(ARTIFACTS_DIR / "detector_cycle2.json")
+    model.load_model(ARTIFACTS_DIR / "detector.json")
 
     backbone = load_backbone()
 

@@ -2,41 +2,41 @@
   "cases": [
     {
       "case": "adv_low_fraction_drain",
-      "caught": false,
-      "max_fraud_probability": 0.00010832872067112476,
+      "caught": true,
+      "max_fraud_probability": 0.999778687953949,
       "description": "ATO drain of only 40% of balance in one step, well below the 85-98% pattern trained on.",
       "n_rows": 1
     },
     {
       "case": "adv_low_fraction_structuring",
-      "caught": false,
-      "max_fraud_probability": 9.245868568541482e-05,
+      "caught": true,
+      "max_fraud_probability": 0.9999715089797974,
       "description": "Structuring at ~40% of the reporting threshold, well below the trained 70-97% band.",
       "n_rows": 4
     },
     {
       "case": "adv_patient_card_testing",
       "caught": true,
-      "max_fraud_probability": 0.9998805522918701,
+      "max_fraud_probability": 0.9977731108665466,
       "description": "Only 2 card-testing probes, ~24 weeks apart -- far more patient than Phase 4's hardened 1-day-spread variant that already evaded the cycle-1 model.",
       "n_rows": 2
     },
     {
       "case": "adv_median_amount_mule",
-      "caught": false,
-      "max_fraud_probability": 0.01499043870717287,
+      "caught": true,
+      "max_fraud_probability": 0.9996914863586426,
       "description": "2-hop mule layering with amount set to PaySim's real TRANSFER median ($9,482), far fewer hops/accounts than the trained mule pattern.",
       "n_rows": 2
     },
     {
       "case": "adv_billpay_mimicry",
-      "caught": false,
-      "max_fraud_probability": 6.476432190538617e-06,
+      "caught": true,
+      "max_fraud_probability": 0.9988085031509399,
       "description": "Recurring same-amount payments to one destination mimicking legitimate bill-pay, no drain/burst/threshold pattern at all -- an ATO operator making the compromised account's payment activity look completely routine.",
       "n_rows": 5
     }
   ],
-  "n_caught": 1,
+  "n_caught": 5,
   "n_total": 5,
-  "summary": "1/5 hand-crafted attacks, specifically designed to look numerically unremarkable (amounts near the real backbone's own median, few hops, no extreme balance-fraction ratios), were still caught by the final detector. This tests generalization to attacks structurally different from anything in training -- a harder and more honest question than Phase 4's in-family hardening test."
+  "summary": "5/5 hand-crafted attacks, specifically designed to look numerically unremarkable (amounts near the real backbone's own median, few hops, no extreme balance-fraction ratios), were still caught by the final detector. This tests generalization to attacks structurally different from anything in training -- a harder and more honest question than Phase 4's in-family hardening test."
 }
