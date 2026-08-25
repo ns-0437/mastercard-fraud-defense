@@ -1,0 +1,33 @@
+{
+  "fallback": {
+    "label": "hand-authored fallback (--no-llm)",
+    "n_synthetic_rows": 2593,
+    "n_test_positives": 1296,
+    "precision": 0.9877769289533995,
+    "recall": 0.9976851851851852,
+    "f1": 0.9927063339731286,
+    "pr_auc": 0.9993505111739345,
+    "per_family_recall": {
+      "ato_rapid_drain": 0.9959677419354839,
+      "card_testing_burst": 1.0,
+      "mule_network_layering": 0.9891304347826086,
+      "structuring_smurfing": 1.0
+    }
+  },
+  "llm": {
+    "label": "LLM-driven (Gemini)",
+    "n_synthetic_rows": 1794,
+    "n_test_positives": 899,
+    "precision": 0.9571275455519829,
+    "recall": 0.9933259176863182,
+    "f1": 0.9748908296943232,
+    "pr_auc": 0.9957453225420585,
+    "per_family_recall": {
+      "ato_rapid_drain": 0.9920424403183024,
+      "card_testing_burst": 1.0,
+      "mule_network_layering": 0.9777777777777777,
+      "structuring_smurfing": 1.0
+    }
+  },
+  "pr_auc_diff": -0.0036051886318759774
+}
