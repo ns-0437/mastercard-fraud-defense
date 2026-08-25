@@ -63,6 +63,11 @@ class AttackConfig:
     timing: TimingParams
     graph: GraphParams
     notes: str = ""
+    # Phase 4 (closed-loop hardening) lever: if True, each synthetic account gets one
+    # small transaction with a real backbone account before the attack pattern, so it
+    # doesn't present as a brand-new isolated node — directly targets the
+    # orig_component_size / orig_is_low_activity graph features the detector leans on.
+    warm_up: bool = False
 
 
 # Hand-authored, domain-grounded fallback configs. Used when no ANTHROPIC_API_KEY is

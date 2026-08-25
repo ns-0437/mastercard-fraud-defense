@@ -67,11 +67,15 @@ def load_and_combine() -> pd.DataFrame:
     print(f"Synthetic attacks: {len(synthetic):,} rows across {synthetic['attack_family'].nunique()} families")
 
     combined = pd.concat([legit_sample, native_fraud, synthetic], ignore_index=True)
-    # Primary detection target: is this a GenAI-simulated attack. Native PaySim fraud
-    # is deliberately NOT part of this label (see module docstring) -- it's evaluated
-    # separately in evaluate.py as a secondary generalization signal, not trained on
-    # as if it were the same thing as label=1.
-    combined["label"] = combined["is_synthetic"].astype(int)
+    # Primary detection target: is this a GenAI-simulated attack row specifically
+    # (isFraud==1 AND synthetic-sourced) -- NOT just "came from the synthetic
+    # generator." Warm-up transactions (Phase 4 hardening, see simulators.py) are
+    # synthetic-sourced but deliberately isFraud==0: they represent an attacker
+    # account's ordinary-looking prior activity and must not be trained/scored as
+    # fraud, or the model would learn that small innocuous payments are suspicious.
+    # Native PaySim fraud is deliberately NOT part of this label (see module
+    # docstring) -- it's evaluated separately in evaluate.py as a secondary signal.
+    combined["label"] = ((combined["is_synthetic"] == 1) & (combined["isFraud"] == 1)).astype(int)
     combined["is_native_fraud"] = ((combined["isFraud"] == 1) & (combined["is_synthetic"] == 0)).astype(int)
     return combined
 
