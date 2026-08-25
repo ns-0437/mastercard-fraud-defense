@@ -37,7 +37,7 @@ export default function Overview({ onNavigate }) {
         </p>
       </div>
 
-      <PipelineDiagram />
+      <PipelineDiagram nodeCount={taxonomy?.nodes?.length} />
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-slate-900 rounded-xl border border-slate-800 py-6">
         <Stat

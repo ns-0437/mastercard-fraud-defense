@@ -1,10 +1,9 @@
-const STAGES = [
-  { id: 'identify', label: 'Identify', sub: '21-node attack taxonomy graph', color: '#f97316', x: 40 },
-  { id: 'generate', label: 'Generate', sub: 'LLM config + deterministic simulator', color: '#a855f7', x: 260 },
-  { id: 'defend', label: 'Defend', sub: 'XGBoost + graph features', color: '#06b6d4', x: 480 },
-]
-
-export default function PipelineDiagram() {
+export default function PipelineDiagram({ nodeCount }) {
+  const STAGES = [
+    { id: 'identify', label: 'Identify', sub: `${nodeCount ?? '…'}-node attack taxonomy graph`, color: '#f97316', x: 40 },
+    { id: 'generate', label: 'Generate', sub: 'LLM config + deterministic simulator', color: '#a855f7', x: 260 },
+    { id: 'defend', label: 'Defend', sub: 'XGBoost + graph features', color: '#06b6d4', x: 480 },
+  ]
   const y = 60
   const boxW = 180
   const boxH = 90
