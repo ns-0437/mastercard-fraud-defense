@@ -119,6 +119,21 @@ do not skip gates.
   time). **Gate PASS.** Kept the earlier FAIL in this log rather than deleting it —
   the fact that the same red-team finding reproduced across two independently-generated
   attack sets is itself stronger evidence than either run alone.
+- **Third run (Aug 25-26, after fixing a units bug in Generate -- see Phase 2 update --
+  which required fully regenerating v1)**: the card-testing blind spot did NOT
+  reproduce this time. Cycle-1 recall on hardened card_testing_burst_v2 was 100%; the
+  weakest hardened family this run was mule_network_layering_v2 at 82.3% recall -- a
+  real gap, but a modest one, not a near-total blind spot. Retraining still recovered
+  full detection (100%) on all families with zero regression. **Honest conclusion,
+  revised from the "reproduced twice" framing above**: this closed-loop mechanism
+  reliably finds SOME real generalization gap when run against a freshly-generated
+  attack set, but WHICH specific gap it finds varies with the random realization of
+  LLM-driven generation. 2 of 3 runs found a severe card-testing gap; 1 of 3 found a
+  milder mule-network gap instead. Do not report only the most dramatic run as if it
+  were a fixed, reproducible property of the system -- report all three, as the docx
+  now does. This is a more defensible and more interesting finding than a single
+  clean number: the mechanism itself is validated by working three times, even though
+  its specific output isn't deterministic.
 
 ## Phase 5 — Web prototype
 - FastAPI backend exposing: taxonomy graph (for viz), a "run detection on this
@@ -178,14 +193,17 @@ do not skip gates.
   evade it (e.g. split a large transfer into many small ones just under your velocity
   threshold) — report whether it catches them. If it doesn't, that's a real limitation
   to disclose, not to hide — judges respect a red-teamer who red-teams their own defense.
-  **Done (Aug 25), via `defend/adversarial_selftest.py`.** Result: 4 of 5 evaded
-  detection. Only an extreme-low-dollar-amount card-testing variant was caught; attacks
-  crafted to look numerically unremarkable (amounts near the real backbone's own
-  median, few hops, no extreme balance-fraction ratios) all evaded the model. This is
-  the single most important finding of the bulletproofing pass: Phase 4 proved the
-  model generalizes across *variations within* its four trained attack families, but
-  this proves it does NOT generalize to attacks that are structurally different from
-  anything it was trained on. Both facts go in the docx — reporting only Phase 4's
+  **Done (Aug 25), via `defend/adversarial_selftest.py`.** First run (on the model
+  before the units-bug regeneration): 4 of 5 evaded. Re-run against the final model
+  (after the units fix required a full retrain): 3 of 5 caught, 2 evaded -- the richer,
+  correctly-scoped structuring data from the bug fix seems to have generalized better,
+  though this wasn't the goal of that fix, it was a side effect worth noting rather
+  than taking credit for. The 2 that still evade (structuring at ~40% of threshold,
+  and bill-pay-mimicry with 0.0000 fraud probability) remain a real, disclosed
+  limitation: Phase 4 proved the model generalizes across *variations within* its four
+  trained attack families, but this proves it does NOT fully generalize to attacks
+  that are structurally different from anything it was trained on. Both facts go in
+  the docx — reporting only Phase 4's
   result would have been materially misleading about how robust the detector actually
   is.
 - Check all three submission artifacts exist and satisfy the literal checklist: repo
