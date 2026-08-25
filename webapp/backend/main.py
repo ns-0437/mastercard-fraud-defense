@@ -24,6 +24,7 @@ ULB_PATH = REPO_ROOT / "defend" / "artifacts" / "ulb_baseline_report.json"
 CYCLE_PATH = REPO_ROOT / "orchestrator" / "cycle_report.json"
 ADVERSARIAL_PATH = REPO_ROOT / "defend" / "artifacts" / "adversarial_selftest_report.json"
 ANOMALY_PATH = REPO_ROOT / "defend" / "artifacts" / "anomaly_detector_report.json"
+THRESHOLD_PATH = REPO_ROOT / "defend" / "artifacts" / "threshold_analysis.json"
 CONFIGS_USED_PATH = REPO_ROOT / "generate" / "attack_configs_used.json"
 FEATURE_IMPORTANCE_PATH = REPO_ROOT / "defend" / "artifacts" / "feature_importance.json"
 SYNTHETIC_DIR = REPO_ROOT / "data" / "synthetic"
@@ -110,6 +111,7 @@ def cycles():
         "closed_loop": _read_json(CYCLE_PATH),
         "adversarial_selftest": _read_json(ADVERSARIAL_PATH),
         "anomaly_detector": _read_json(ANOMALY_PATH),
+        "threshold_analysis": _read_json(THRESHOLD_PATH),
     }
 
 

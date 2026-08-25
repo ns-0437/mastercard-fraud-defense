@@ -39,6 +39,7 @@ export default function ClosedLoopResults() {
   const loop = data.closed_loop
   const adversarial = data.adversarial_selftest
   const anomaly = data.anomaly_detector
+  const thresholds = data.threshold_analysis
 
   return (
     <div className="space-y-6 max-w-5xl">
@@ -58,6 +59,39 @@ export default function ClosedLoopResults() {
           ))}
         </div>
       </Section>
+
+      {thresholds && (
+        <Section title="Threshold sensitivity — the 0.5 default above is a choice, not a constant">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm min-w-[500px]">
+              <thead>
+                <tr className="text-slate-500 text-xs">
+                  <th className="text-left py-1">Threshold</th>
+                  <th className="text-right py-1">Precision</th>
+                  <th className="text-right py-1">Recall</th>
+                  <th className="text-right py-1">FPR</th>
+                </tr>
+              </thead>
+              <tbody>
+                {thresholds.map((t) => (
+                  <tr key={t.threshold} className={`border-t border-slate-800 ${t.threshold === 0.5 ? 'bg-slate-800/40' : ''}`}>
+                    <td className="py-1">{t.threshold}{t.threshold === 0.5 ? ' (default)' : ''}</td>
+                    <td className="text-right">{t.precision.toFixed(4)}</td>
+                    <td className="text-right">{t.recall.toFixed(4)}</td>
+                    <td className="text-right">{(t.fpr * 100).toFixed(3)}%</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-xs text-slate-500 mt-3">
+            No cost-of-fraud/cost-of-friction dollar figure is used to declare an "optimal" threshold —
+            no industry loss data to cite for that. Shown instead: a deployment with a human review
+            queue could run at 0.9 (precision 0.966, recall still 0.985) for far fewer transactions
+            flagged than the 0.5 default used everywhere else in this demo for comparability.
+          </p>
+        </Section>
+      )}
 
       <Section title="Independent methodology check — ULB Credit Card Fraud (different real dataset, no graph features possible)">
         {ulb && (
