@@ -32,12 +32,24 @@ SYNTHETIC_DIR = REPO_ROOT / "data" / "synthetic"
 # actually needs to demo (see webapp/backend/README.md for how this was generated).
 LEGIT_SAMPLES_PATH = Path(__file__).parent / "legit_samples.csv"
 
+# Scoped to the actual known frontend origins, not "*" -- a wildcard-CORS API is an
+# odd thing to ship on a payment-security-themed submission specifically. Both Cloud
+# Run URL formats are listed because the newer <region>.run.app domain is blocked by
+# some ISP DNS resolvers (see README.md) -- some judges/browsers may still resolve it
+# even though the demo link points at the .a.run.app form.
+ALLOWED_ORIGINS = [
+    "https://aidefenselab-frontend-gwezm4pj4a-uc.a.run.app",
+    "https://aidefenselab-frontend-612620013489.us-central1.run.app",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+
 app = FastAPI(title="Mastercard Innovation Challenge - AI Defense Lab")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # demo scope; a real deployment would scope this to the actual frontend origin
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=ALLOWED_ORIGINS,
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type"],
 )
 
 scorer = Scorer()
