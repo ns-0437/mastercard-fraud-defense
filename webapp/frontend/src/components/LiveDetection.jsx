@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { API_BASE } from '../api.js'
 
 export default function LiveDetection() {
   const [samples, setSamples] = useState([])
@@ -8,7 +9,7 @@ export default function LiveDetection() {
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    fetch('/api/samples')
+    fetch(`${API_BASE}/api/samples`)
       .then((r) => r.json())
       .then(setSamples)
       .catch((e) => setError(e.message))
@@ -19,7 +20,7 @@ export default function LiveDetection() {
     setLoading(true)
     setError(null)
     try {
-      const res = await fetch('/api/detect', {
+      const res = await fetch(`${API_BASE}/api/detect`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(samples[selectedIdx].transaction),

@@ -1,0 +1,22 @@
+# Build context is the repo root (not webapp/backend/) -- the API serves artifacts from
+# identify/, defend/, generate/, and orchestrator/, so those need to be in the image too.
+# Deliberately does NOT copy data/raw/ (493MB+150MB of source datasets the API never
+# reads directly -- see webapp/backend/main.py, which reads a small pre-extracted
+# legit_samples.csv instead) or data/processed/ (only used offline for training).
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY identify/taxonomy_graph.json identify/taxonomy_graph.json
+COPY generate/fidelity_report.json generate/fidelity_report.json
+COPY defend/artifacts/ defend/artifacts/
+COPY orchestrator/cycle_report.json orchestrator/cycle_report.json
+COPY data/synthetic/ data/synthetic/
+COPY webapp/backend/ webapp/backend/
+
+ENV PORT=8080
+EXPOSE 8080
+CMD ["sh", "-c", "uvicorn webapp.backend.main:app --host 0.0.0.0 --port ${PORT}"]

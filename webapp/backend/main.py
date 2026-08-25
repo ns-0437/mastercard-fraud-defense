@@ -23,7 +23,10 @@ EVAL_PATH = REPO_ROOT / "defend" / "artifacts" / "evaluation_report.json"
 ULB_PATH = REPO_ROOT / "defend" / "artifacts" / "ulb_baseline_report.json"
 CYCLE_PATH = REPO_ROOT / "orchestrator" / "cycle_report.json"
 SYNTHETIC_DIR = REPO_ROOT / "data" / "synthetic"
-RAW_PATH = REPO_ROOT / "data" / "raw" / "PS_20174392719_1491204439457_log.csv"
+# A small pre-extracted sample of real legit PaySim rows, NOT the full 493MB raw file --
+# the deployed container doesn't ship the full backbone dataset, only what the API
+# actually needs to demo (see webapp/backend/README.md for how this was generated).
+LEGIT_SAMPLES_PATH = Path(__file__).parent / "legit_samples.csv"
 
 app = FastAPI(title="Mastercard Innovation Challenge - AI Defense Lab")
 app.add_middleware(
@@ -104,9 +107,9 @@ def samples():
                     "oldbalanceDest": float(row["oldbalanceDest"]), "newbalanceDest": float(row["newbalanceDest"]),
                 },
             })
-    if RAW_PATH.exists():
-        legit_df = pd.read_csv(RAW_PATH, nrows=50_000)
-        legit_row = legit_df[legit_df["isFraud"] == 0].iloc[0]
+    if LEGIT_SAMPLES_PATH.exists():
+        legit_df = pd.read_csv(LEGIT_SAMPLES_PATH)
+        legit_row = legit_df.iloc[0]
         out.insert(0, {
             "label": "legitimate transaction (real PaySim data)",
             "attack_family": "none",

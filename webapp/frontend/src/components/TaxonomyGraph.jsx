@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { API_BASE } from '../api.js'
 
 const CHANNEL_COLORS = {
   'card-not-present': '#f97316',
@@ -21,7 +22,7 @@ export default function TaxonomyGraph() {
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    fetch('/api/taxonomy')
+    fetch(`${API_BASE}/api/taxonomy`)
       .then((r) => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`)
         return r.json()

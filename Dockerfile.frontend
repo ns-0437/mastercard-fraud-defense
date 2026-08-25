@@ -1,0 +1,18 @@
+# Multi-stage: build the static React bundle with Node, serve it with nginx.
+# VITE_API_BASE_URL is baked in at build time (Vite env vars are compile-time, not
+# runtime) -- pass --build-arg VITE_API_BASE_URL=<backend Cloud Run URL> when building,
+# after the backend has already been deployed and its URL is known.
+FROM node:20-slim AS build
+WORKDIR /app
+COPY webapp/frontend/package.json webapp/frontend/package-lock.json ./
+RUN npm ci
+COPY webapp/frontend/ ./
+ARG VITE_API_BASE_URL=""
+ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
+RUN npm run build
+
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY Dockerfile.frontend.nginx.conf.template /etc/nginx/templates/default.conf.template
+ENV PORT=8080
+EXPOSE 8080

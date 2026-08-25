@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { API_BASE } from '../api.js'
 
 function Metric({ label, value }) {
   return (
@@ -23,7 +24,7 @@ export default function ClosedLoopResults() {
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    fetch('/api/cycles')
+    fetch(`${API_BASE}/api/cycles`)
       .then((r) => r.json())
       .then(setData)
       .catch((e) => setError(e.message))
