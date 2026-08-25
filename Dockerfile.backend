@@ -12,6 +12,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY identify/taxonomy_graph.json identify/taxonomy_graph.json
 COPY generate/fidelity_report.json generate/fidelity_report.json
+COPY generate/attack_configs_used.json generate/attack_configs_used.json
 COPY defend/artifacts/ defend/artifacts/
 COPY orchestrator/cycle_report.json orchestrator/cycle_report.json
 COPY data/synthetic/ data/synthetic/
