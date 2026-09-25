@@ -98,14 +98,54 @@ def time_split(df: pd.DataFrame, split_frac: float = SPLIT_FRAC) -> tuple[pd.Dat
     return train, test
 
 
+def add_graph_features_without_future_leakage(
+    combined: pd.DataFrame, split_frac: float = SPLIT_FRAC
+) -> pd.DataFrame:
+    """Computes graph features per row without ever letting a TRAIN row's features be
+    built from a graph that includes TEST-period (future) transactions.
+
+    Split first, then:
+      - train rows: graph features from the train-period transaction set ONLY.
+      - test rows: graph features from train + test transactions -- a test-period
+        account's structural context legitimately includes everything that happened
+        up through the end of the (already-occurred, being batch-evaluated) test
+        window, including other test-period accounts. What must never happen is the
+        reverse: a training example's features depending on something that, at the
+        time that transaction occurred, hadn't happened yet.
+
+    Fixes a real leak found in the previous implementation (`add_graph_features(combined)`
+    called ONCE over the full train+test set, before the split): every graph feature
+    column (orig_component_size, orig_out_degree, shared_neighbor_count, ...) was built
+    from a graph containing every test-period edge too, so a training row's structural
+    features reflected accounts and connections that, at that row's own step, had not
+    happened yet -- the exact "a real deployed detector only ever sees the past" invariant
+    this module's own docstring states as the reason for a time-based (not random) split
+    in the first place. Reproduced directly: in a small hand-built example, a training
+    row's orig_component_size was 4 computed over the combined set vs. the correct 2
+    computed from train-period transactions alone.
+    """
+    cutoff = combined["step"].quantile(1 - split_frac)
+    train_txns = combined[combined["step"] < cutoff]
+    test_txns = combined  # train ∪ test: every account's full history up to this point
+
+    train_featured = add_graph_features(train_txns)
+    test_featured = add_graph_features(test_txns)
+
+    train_rows = train_featured[train_featured["step"] < cutoff]
+    test_rows = test_featured[test_featured["step"] >= cutoff]
+    return pd.concat([train_rows, test_rows], ignore_index=True)
+
+
 def main():
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     combined = load_and_combine()
     combined = add_tabular_features(combined)
 
     print("Building transaction graph and computing graph features "
-          f"over {len(combined):,} rows (this is the working set, not the full 6.3M-row backbone)...")
-    combined = add_graph_features(combined)
+          f"over {len(combined):,} rows (this is the working set, not the full 6.3M-row backbone). "
+          "Train rows use a train-only graph so no future transaction can leak into a training "
+          "example's structural features...")
+    combined = add_graph_features_without_future_leakage(combined)
 
     train, test = time_split(combined)
     print(f"\nTime-based split at step cutoff (last {SPLIT_FRAC:.0%} of step range held out):")
