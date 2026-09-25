@@ -23,8 +23,10 @@ from sklearn.metrics import precision_score, recall_score, f1_score, average_pre
 sys.path.insert(0, str(Path(__file__).parent))
 sys.path.insert(0, str(Path(__file__).parent.parent / "generate"))
 
-from build_features import add_tabular_features, time_split, ALL_FEATURE_COLUMNS, WORKING_SET_LEGIT, SEED  # noqa: E402
-from graph_features import add_graph_features  # noqa: E402
+from build_features import (  # noqa: E402
+    add_tabular_features, add_graph_features_without_future_leakage,
+    time_split, ALL_FEATURE_COLUMNS, WORKING_SET_LEGIT, SEED,
+)
 from simulate import load_backbone  # noqa: E402
 
 REPO_ROOT = Path(__file__).parent.parent
@@ -44,7 +46,12 @@ def build_and_evaluate(synthetic_path: Path, label: str) -> dict:
     combined = pd.concat([legit, native_fraud, synthetic], ignore_index=True)
     combined["label"] = ((combined["is_synthetic"] == 1) & (combined["isFraud"] == 1)).astype(int)
     combined = add_tabular_features(combined)
-    combined = add_graph_features(combined)
+    # NOT add_graph_features(combined) followed by a later split: that computes graph
+    # features over the whole set first, so a train row's orig_component_size/
+    # shared_neighbor_count/etc. could reflect test-period transactions that, at that
+    # row's own step, hadn't happened yet -- see that function's docstring and
+    # build_features.py's own main() (fixed for the same reason).
+    combined = add_graph_features_without_future_leakage(combined)
 
     train, test = time_split(combined)
     n_pos, n_neg = train["label"].sum(), len(train) - train["label"].sum()
