@@ -50,7 +50,10 @@ from attack_configs import DEFAULT_CONFIGS, AttackConfig, AmountDistParams, Timi
 from simulators import SIMULATORS  # noqa: E402
 from simulate import load_backbone  # noqa: E402
 from graph_features import add_graph_features  # noqa: E402
-from build_features import add_tabular_features, time_split, ALL_FEATURE_COLUMNS, WORKING_SET_LEGIT, SEED  # noqa: E402
+from build_features import (  # noqa: E402
+    add_tabular_features, add_graph_features_without_future_leakage,
+    time_split, ALL_FEATURE_COLUMNS, WORKING_SET_LEGIT, SEED,
+)
 
 ARTIFACTS_DIR = REPO_ROOT / "defend" / "artifacts"
 SYNTHETIC_DIR = REPO_ROOT / "data" / "synthetic"
@@ -82,13 +85,29 @@ def harden_config(base: AttackConfig) -> AttackConfig:
     return v2
 
 
-def build_working_set(legit: pd.DataFrame, native_fraud: pd.DataFrame, synthetic: pd.DataFrame) -> pd.DataFrame:
+def assemble_working_set(legit: pd.DataFrame, native_fraud: pd.DataFrame, synthetic: pd.DataFrame) -> pd.DataFrame:
+    """Label derivation + tabular features only -- deliberately NOT graph features.
+    Graph features depend on which OTHER rows are in scope (see graph_features.py's
+    own docstring), so whether a single shared graph or a leakage-safe split-aware one
+    is correct depends on what the caller does with the result next: build_working_set
+    below (evaluation only, no split) vs. build_features.add_graph_features_without_
+    future_leakage (used ahead of a train/test split, see that function's docstring)."""
     combined = pd.concat([legit, native_fraud, synthetic], ignore_index=True)
     combined["label"] = ((combined["is_synthetic"] == 1) & (combined["isFraud"] == 1)).astype(int)
     combined["is_native_fraud"] = ((combined["isFraud"] == 1) & (combined["is_synthetic"] == 0)).astype(int)
-    combined = add_tabular_features(combined)
-    combined = add_graph_features(combined)
-    return combined
+    return add_tabular_features(combined)
+
+
+def build_working_set(legit: pd.DataFrame, native_fraud: pd.DataFrame, synthetic: pd.DataFrame) -> pd.DataFrame:
+    """For evaluation-only use (no train/test split of the result) -- e.g. Step A below,
+    checking whether the existing cycle-1 model catches v2 attacks it never trained on.
+    A single shared graph is correct here: nothing in this working set is used for
+    training, so there is no "future" relative to anything else in it to leak into.
+    Do NOT call this ahead of a time_split -- use assemble_working_set +
+    add_graph_features_without_future_leakage instead (see Step B below), or a
+    training row's graph features can be built from test-period transactions that,
+    at that row's own step, hadn't happened yet."""
+    return add_graph_features(assemble_working_set(legit, native_fraud, synthetic))
 
 
 def evaluate_model(model: xgb.XGBClassifier, df: pd.DataFrame, label_col: str = "label") -> dict:
@@ -160,7 +179,12 @@ def main():
         print(f"    {fam:31s} recall={r:.4f}")
 
     print("\n--- Step B: retrain on v1+v2 combined, check v1 recall doesn't regress ---")
-    combined_all = build_working_set(legit, native_fraud, pd.concat([v1, v2], ignore_index=True))
+    # NOT build_working_set: that computes graph features over the whole set before any
+    # split, so a train row's orig_component_size/shared_neighbor_count/etc. could reflect
+    # test-period transactions that hadn't happened yet at that row's own step. See
+    # build_features.add_graph_features_without_future_leakage's docstring.
+    assembled_all = assemble_working_set(legit, native_fraud, pd.concat([v1, v2], ignore_index=True))
+    combined_all = add_graph_features_without_future_leakage(assembled_all)
     train, test = time_split(combined_all)
     print(f"  train: {len(train):,} rows ({train['label'].sum()} positive), "
           f"test: {len(test):,} rows ({test['label'].sum()} positive)")
